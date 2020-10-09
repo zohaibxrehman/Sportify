@@ -10,7 +10,7 @@
 .history
 .svn/
 sportify-8d62e-firebase-adminsdk-sgz9l-882a9b2759.json
-
+node_modules/
 
 # IntelliJ related
 *.iml
