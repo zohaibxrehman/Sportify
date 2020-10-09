@@ -58,15 +58,19 @@ class LandingPageState extends State<LandingPage> {
 
   _makeGetRequest() async {
     Response response = await get(_localhost());
-    setState(() {
-      serverResponse = response.body;
-    });
+    if (response.statusCode != 200)
+      throw Exception('Failed to link with backend.');
+    //  V  for when there is a response to be sent
+    //else
+    // setState(() {
+    //   serverResponse = response.body;
+    // });
   }
 
   String _localhost() {
     if (Platform.isAndroid)
-      return 'http://10.0.2.2:3000';
+      return 'http://10.0.2.2:3000/login';
     else // for iOS simulator
-      return 'http://localhost:3000';
+      return 'http://localhost:3000/login';
   }
 }
