@@ -1,7 +1,9 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:sportify_app/screens/home_page.dart';
 
 class LandingPage extends StatefulWidget {
@@ -57,14 +59,15 @@ class LandingPageState extends State<LandingPage> {
   }
 
   _makeGetRequest() async {
-    Response response = await get(_localhost());
-    if (response.statusCode != 200)
-      throw Exception('Failed to link with backend.');
-    //  V  for when there is a response to be sent
-    //else
-    // setState(() {
-    //   serverResponse = response.body;
-    // });
+    final Dio dio = new Dio();
+    try {
+      var response = await dio.get(_localhost());
+      print(response);
+      if (response.statusCode != 200)
+        throw Exception('Failed to link with backend');
+    } on DioError catch (e) {
+      print(e);
+    }
   }
 
   String _localhost() {
