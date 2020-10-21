@@ -31,7 +31,6 @@ app.post('/user/profile', (req, res) => {
   const {utorid, firstName, lastName, birthdate, bio, sportsInterests, favoriteTeam} = req.body;
 
   if (!(utorid && firstName && lastName && birthdate && bio && sportsInterests && favoriteTeam)) {
-    console.log(utorid, firstName, lastName, birthdate, bio, sportsInterests, favoriteTeam);
     return res.sendStatus(400);
   }
 
@@ -45,8 +44,30 @@ app.post('/user/profile', (req, res) => {
     favoriteTeam: favoriteTeam,
   };
 
-  var updates = {};
+  let updates = {};
   updates['/users/' + postData.utorid] = postData;
+  firebase.database().ref().update(updates);
+
+  return res.sendStatus(200);
+})
+
+app.post('/event', (req, res) => {
+  const {utorid, title, description, location} = req.body;
+
+  if (!(utorid && title && description && location)) {
+    return res.sendStatus(400);
+  }
+
+  const postData = {
+    utorid : utorid,
+    title: title,
+    description: description,
+    location: location,
+  };
+
+  let updates = {};
+  const newEventId = firebase.database().ref().child('events').push().key;
+  updates['/events/' + newEventId] = postData;
   firebase.database().ref().update(updates);
 
   return res.sendStatus(200);
