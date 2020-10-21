@@ -91,6 +91,15 @@ app.get('/event/:id', (req, res) => {
   });
 })
 
+app.get('/event', (req, res) => {
+  const eventRef = firebase.database().ref('/events');
+  eventRef.once('value').then(function(snapshot) {
+    return res.send(snapshot.val());
+  }).catch(function(error) {
+    return res.sendStatus(404);
+  });
+})
+
 app.listen(port, () => {
   console.log(`Sportify server listening at http://localhost:${port}`)
 })
