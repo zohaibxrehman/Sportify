@@ -28,21 +28,28 @@ app.get('/login', (req, res) => {
 })
 
 app.post('/user/profile', (req, res) => {
+  const {utorid, firstName, lastName, birthdate, bio, sportsInterests, favoriteTeam} = req.body;
+
+  if (!(utorid && firstName && lastName && birthdate && bio && sportsInterests && favoriteTeam)) {
+    console.log(utorid, firstName, lastName, birthdate, bio, sportsInterests, favoriteTeam);
+    return res.sendStatus(400);
+  }
+
   const postData = {
-    utorid : req.body.utorid,
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
-    birthdate: req.body.birthdate,
-    bio: req.body.bio,
-    sportsInterests: req.body.sportsInterests,
-    favoriteTeam: req.body.favoriteTeam,
+    utorid : utorid,
+    firstName: firstName,
+    lastName: lastName,
+    birthdate: birthdate,
+    bio: bio,
+    sportsInterests: sportsInterests,
+    favoriteTeam: favoriteTeam,
   };
 
   var updates = {};
   updates['/users/' + postData.utorid] = postData;
   firebase.database().ref().update(updates);
 
-  res.sendStatus(200);
+  return res.sendStatus(200);
 })
 
 app.listen(port, () => {
