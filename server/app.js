@@ -27,7 +27,7 @@ app.get('/login', (req, res) => {
   res.sendStatus(200);
 })
 
-app.post('/user/profile', (req, res) => {
+app.post('/user/new', (req, res) => {
   const {utorid, firstName, lastName, birthdate, bio, sportsInterests, favoriteTeam} = req.body;
 
   if (!(utorid && firstName && lastName && birthdate && bio && sportsInterests && favoriteTeam)) {
@@ -60,7 +60,7 @@ app.get('/user/:id', (req, res) => {
   });
 })
 
-app.post('/event', (req, res) => {
+app.post('/event/new', (req, res) => {
   const {utorid, title, description, location} = req.body;
 
   if (!(utorid && title && description && location)) {
@@ -82,8 +82,8 @@ app.post('/event', (req, res) => {
   return res.sendStatus(200);
 })
 
-app.get('/event/:id', (req, res) => {
-  const eventRef = firebase.database().ref('/events/' + req.params.id);
+app.get('/events', (req, res) => {
+  const eventRef = firebase.database().ref('/events');
   eventRef.once('value').then(function(snapshot) {
     return res.send(snapshot.val());
   }).catch(function(error) {
@@ -91,8 +91,8 @@ app.get('/event/:id', (req, res) => {
   });
 })
 
-app.get('/event', (req, res) => {
-  const eventRef = firebase.database().ref('/events');
+app.get('/event/:id', (req, res) => {
+  const eventRef = firebase.database().ref('/events/' + req.params.id);
   eventRef.once('value').then(function(snapshot) {
     return res.send(snapshot.val());
   }).catch(function(error) {
