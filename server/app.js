@@ -51,6 +51,15 @@ app.post('/user/profile', (req, res) => {
   return res.sendStatus(200);
 })
 
+app.get('/user/:id', (req, res) => {
+  const userRef = firebase.database().ref('/users/' + req.params.id);
+  userRef.once('value').then(function(snapshot) {
+    return res.send(snapshot.val());
+  }).catch(function(error) {
+    return res.sendStatus(404);
+  });
+})
+
 app.post('/event', (req, res) => {
   const {utorid, title, description, location} = req.body;
 
