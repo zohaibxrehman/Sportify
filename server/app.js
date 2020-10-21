@@ -51,7 +51,7 @@ app.post('/user/new', (req, res) => {
   return res.sendStatus(200);
 })
 
-app.get('/user/:id', (req, res) => {
+app.get('/users/:id', (req, res) => {
   const userRef = firebase.database().ref('/users/' + req.params.id);
   userRef.once('value').then(function(snapshot) {
     return res.send(snapshot.val());
@@ -91,7 +91,7 @@ app.get('/events', (req, res) => {
   });
 })
 
-app.get('/event/:id', (req, res) => {
+app.get('/events/:id', (req, res) => {
   const eventRef = firebase.database().ref('/events/' + req.params.id);
   eventRef.once('value').then(function(snapshot) {
     return res.send(snapshot.val());
