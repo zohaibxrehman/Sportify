@@ -27,22 +27,77 @@ app.get('/login', (req, res) => {
   res.sendStatus(200);
 })
 
-app.post('/user/profile', (req, res) => {
+app.post('/user/new', (req, res) => {
+  const {utorid, firstName, lastName, birthdate, bio, sportsInterests, favoriteTeam} = req.body;
+
+  if (!(utorid && firstName && lastName && birthdate && bio && sportsInterests && favoriteTeam)) {
+    return res.sendStatus(400);
+  }
+
   const postData = {
-    utorid : req.body.utorid,
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
-    birthdate: req.body.birthdate,
-    bio: req.body.bio,
-    sportsInterests: req.body.sportsInterests,
-    favoriteTeam: req.body.favoriteTeam,
+    utorid : utorid,
+    firstName: firstName,
+    lastName: lastName,
+    birthdate: birthdate,
+    bio: bio,
+    sportsInterests: sportsInterests,
+    favoriteTeam: favoriteTeam,
   };
 
-  var updates = {};
+  let updates = {};
   updates['/users/' + postData.utorid] = postData;
   firebase.database().ref().update(updates);
 
-  res.sendStatus(200);
+  return res.sendStatus(200);
+})
+
+app.get('/users/:id', (req, res) => {
+  const userRef = firebase.database().ref('/users/' + req.params.id);
+  userRef.once('value').then(function(snapshot) {
+    return res.send(snapshot.val());
+  }).catch(function(error) {
+    return res.sendStatus(404);
+  });
+})
+
+app.post('/event/new', (req, res) => {
+  const {utorid, title, description, location} = req.body;
+
+  if (!(utorid && title && description && location)) {
+    return res.sendStatus(400);
+  }
+
+  const postData = {
+    utorid : utorid,
+    title: title,
+    description: description,
+    location: location,
+  };
+
+  let updates = {};
+  const newEventId = firebase.database().ref().child('events').push().key;
+  updates['/events/' + newEventId] = postData;
+  firebase.database().ref().update(updates);
+
+  return res.sendStatus(200);
+})
+
+app.get('/events', (req, res) => {
+  const eventRef = firebase.database().ref('/events');
+  eventRef.once('value').then(function(snapshot) {
+    return res.send(snapshot.val());
+  }).catch(function(error) {
+    return res.sendStatus(404);
+  });
+})
+
+app.get('/events/:id', (req, res) => {
+  const eventRef = firebase.database().ref('/events/' + req.params.id);
+  eventRef.once('value').then(function(snapshot) {
+    return res.send(snapshot.val());
+  }).catch(function(error) {
+    return res.sendStatus(404);
+  });
 })
 
 app.listen(port, () => {
