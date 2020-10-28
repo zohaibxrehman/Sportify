@@ -18,6 +18,10 @@ class BasicDateField extends StatelessWidget {
       DateTimeField(
         decoration: InputDecoration(
           hintText: 'Date',
+          suffixIcon: Icon(
+            Icons.date_range,
+            size: 30,
+          ),
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
         ),
         format: format,
@@ -30,6 +34,66 @@ class BasicDateField extends StatelessWidget {
         },
       ),
     ]);
+  }
+}
+
+class SportPicker extends StatefulWidget {
+  @override
+  _SportPickerState createState() {
+    return _SportPickerState();
+  }
+}
+
+class _SportPickerState extends State<SportPicker> {
+  String _value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 10.0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15.0),
+          border: Border.all(style: BorderStyle.solid, width: 0.80),
+        ),
+        child: DropdownButton<String>(
+          isExpanded: true,
+          items: [
+            DropdownMenuItem<String>(
+              child: Text('Cricket'),
+              value: 'one',
+            ),
+            DropdownMenuItem<String>(
+              child: Text('Basketball'),
+              value: 'two',
+            ),
+            DropdownMenuItem<String>(
+              child: Text('Hockey'),
+              value: 'three',
+            ),
+            DropdownMenuItem<String>(
+              child: Text('Football'),
+              value: 'four',
+            ),
+            DropdownMenuItem<String>(
+              child: Text('Badminton'),
+              value: 'five',
+            ),
+            DropdownMenuItem<String>(
+              child: Text('Tennis'),
+              value: 'six',
+            ),
+          ],
+          onChanged: (String value) {
+            setState(() {
+              _value = value;
+            });
+          },
+          hint: Text('Select Sport'),
+          value: _value,
+        ),
+      ),
+    );
   }
 }
 
@@ -101,10 +165,10 @@ class EventCreationState extends State<EventCreation> {
       decoration: InputDecoration(
         hintText: 'Description',
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-        contentPadding: new EdgeInsets.fromLTRB(5, 0, 0, 90),
+        // contentPadding: const EdgeInsets.fromLTRB(5, 0, 0, 90),
       ),
       keyboardType: TextInputType.multiline,
-      maxLines: null,
+      maxLines: 6,
       validator: (String value) {
         if (value.isEmpty) {
           return 'Description is required';
@@ -144,7 +208,8 @@ class EventCreationState extends State<EventCreation> {
                 SizedBox(
                   height: 20,
                 ),
-                _buildSport(),
+                // _buildSport(),
+                SportPicker(),
                 SizedBox(
                   height: 20,
                 ),
