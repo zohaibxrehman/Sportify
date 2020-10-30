@@ -1,8 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-var messages = [{'text': 'hi', 'sender': 'vishnu'}];
+var loggedInUser = "vishnu";
 
 class ChatScreen extends StatefulWidget {
   static const String id = 'chat_screen';
@@ -13,6 +14,8 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
 
+  final _fireStore = FirebaseFirestore.instance;
+
   String messageText;
   final msgController = TextEditingController();
 
@@ -20,10 +23,6 @@ class _ChatScreenState extends State<ChatScreen> {
   void initState() {
     super.initState();
     getCurrentUser();
-  }
-
-  void getMessages() async {
-
   }
 
   void getCurrentUser() async {
@@ -53,16 +52,26 @@ class _ChatScreenState extends State<ChatScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             StreamBuilder<QuerySnapshot>(
+              stream: _fireStore.collection('messages').snapshots(),
               // ignore: missing_return
               builder: (context, snapshot) {
                 List<MessageBubble> messageWidgets = [];
-
+                if (!snapshot.hasData) {
+                  return Column();
+                }
+                final messages = snapshot.data.docs.reversed;
                 for (var message in messages) {
+                  bool isUser;
 
+                  if (message['sender'] == loggedInUser) {
+                    isUser = true;
+                  } else {
+                    isUser = false;
+                  }
                   final messageWidget = MessageBubble(
                     messageText: message['text'],
                     messageSender: message['sender'],
-                    isUser: true,
+                    isUser: isUser,
                   );
                   messageWidgets.add(messageWidget);
                 }
@@ -99,9 +108,9 @@ class _ChatScreenState extends State<ChatScreen> {
                   FlatButton(
                     onPressed: () {
                       msgController.clear();
-                      messages.add(
+                      _fireStore.collection('messages').add(
                           {'text': messageText, 'sender': 'vishnu'});
-                      print(messages);
+
                     },
                     child: Text(
                       'Send',
