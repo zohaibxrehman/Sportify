@@ -42,6 +42,7 @@ app.post('/user/new', (req, res) => {
     bio: bio,
     sportsInterests: sportsInterests,
     favoriteTeam: favoriteTeam,
+    events: false
   };
 
   let updates = {};
@@ -67,17 +68,25 @@ app.post('/event/new', (req, res) => {
     return res.sendStatus(400);
   }
 
+  const users = {};
+  users[utorid] = true;
+
   const postData = {
-    utorid : utorid,
+    owner: utorid, 
+    users: users,
     title: title,
     description: description,
     location: location,
   };
 
-  let updates = {};
+  let eventUpdates = {};
   const newEventId = firebase.database().ref().child('events').push().key;
-  updates['/events/' + newEventId] = postData;
-  firebase.database().ref().update(updates);
+  eventUpdates['/events/' + newEventId] = postData;
+  firebase.database().ref().update(eventUpdates);
+
+  let userUpdates = {};
+  userUpdates['/users/' + utorid + '/events/' + newEventId] = true;
+  firebase.database().ref().update(userUpdates);
 
   return res.sendStatus(200);
 })
