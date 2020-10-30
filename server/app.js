@@ -77,7 +77,6 @@ app.post('/event/new', (req, res) => {
     title: title,
     description: description,
     location: location,
-    messages: false
   };
 
   let eventUpdates = {};
@@ -103,15 +102,6 @@ app.get('/events', (req, res) => {
 
 app.get('/events/:id', (req, res) => {
   const eventRef = firebase.database().ref('/events/' + req.params.id);
-  eventRef.once('value').then(function(snapshot) {
-    return res.send(snapshot.val());
-  }).catch(function(error) {
-    return res.sendStatus(404);
-  });
-})
-
-app.get('/events/:id/messages', (req, res) => {
-  const eventRef = firebase.database().ref('/events/' + req.params.id + '/messages');
   eventRef.once('value').then(function(snapshot) {
     return res.send(snapshot.val());
   }).catch(function(error) {
