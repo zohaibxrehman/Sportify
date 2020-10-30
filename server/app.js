@@ -128,6 +128,25 @@ app.get('/user/:id/events', (req, res) => {
   });
 })
 
+app.put('/event/:eventId/newUser/:userId', (req, res) => {
+  const utorid = req.params.userId
+  const eventId = req.params.eventId
+ 
+  if (!(utorid && eventId)) {
+    return res.sendStatus(400);
+  }
+
+  let eventUpdates = {};
+  eventUpdates['/events/' + eventId + '/users/' + utorid] = true;
+  firebase.database().ref().update(eventUpdates);
+
+  let userUpdates = {};
+  userUpdates['/users/' + utorid + '/events/' + eventId] = true;
+  firebase.database().ref().update(userUpdates);
+
+  return res.sendStatus(200);
+})
+
 app.listen(port, () => {
   console.log(`Sportify server listening at http://localhost:${port}`)
 })
