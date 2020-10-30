@@ -204,12 +204,12 @@ class EventCreationState extends State<EventCreation> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                _buildTitle(),
+                SportPicker(),
                 SizedBox(
                   height: 20,
                 ),
                 // _buildSport(),
-                SportPicker(),
+                _buildTitle(),
                 SizedBox(
                   height: 20,
                 ),
