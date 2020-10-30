@@ -69,6 +69,16 @@ class ProfileCreationState extends State<ProfileCreation> {
         });
   }
 
+  //Divider
+  Container categoryDivider() {
+    return Container(
+      height: 1.0,
+      width: MediaQuery.of(context).size.width,
+      color: Colors.grey,
+      margin: const EdgeInsets.only(left: 10.0, right: 10.0),
+    );
+  }
+
   Widget _buildFavTeam() {
     return TextFormField(
         decoration: InputDecoration(
@@ -90,7 +100,7 @@ class ProfileCreationState extends State<ProfileCreation> {
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(
-        title: Text("Create Profile",
+        title: Text("Profile",
             style: TextStyle(
               fontSize: 32,
               color: Colors.black,
@@ -106,17 +116,55 @@ class ProfileCreationState extends State<ProfileCreation> {
                   key: _formKey,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
+                    children: <Widget>[
                       _buildFirstName(),
                       SizedBox(height: 20),
                       _buildLastName(),
                       SizedBox(height: 20),
-                      _buildSportsInterests(),
+                      categoryDivider(),
+                      //Offer heading
+                      Container(
+                          child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          'Sports you Play',
+                          style: TextStyle(
+                            color: Color(0xff005ce6),
+                            fontSize: 24.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      )),
+
+                      //Chips
+                      Wrap(
+                        spacing: 5.0,
+                        runSpacing: 5.0,
+                        children: <Widget>[
+                          filterChipWidget(chipName: 'Cricket'),
+                          filterChipWidget(chipName: 'Football'),
+                          filterChipWidget(chipName: 'Soccer'),
+                          filterChipWidget(chipName: 'Tennis'),
+                          filterChipWidget(chipName: 'Basketball'),
+                          filterChipWidget(chipName: 'Badminton'),
+                          filterChipWidget(chipName: 'PingPong'),
+                          filterChipWidget(chipName: 'PingPong'),
+                          filterChipWidget(chipName: 'PingPong'),
+                          filterChipWidget(chipName: 'PingPong'),
+                          filterChipWidget(chipName: 'PingPong'),
+                          filterChipWidget(chipName: 'PingPong'),
+                          filterChipWidget(chipName: 'PingPong'),
+                          filterChipWidget(chipName: 'PingPong'),
+                          filterChipWidget(chipName: 'PingPong'),
+                          filterChipWidget(chipName: 'PingPong'),
+                        ],
+                      ),
+                      categoryDivider(),
                       SizedBox(height: 20),
                       _buildFavTeam(),
                       // _buildDOB(),
                       SizedBox(
-                        height: 200,
+                        height: 100,
                       ),
                       SizedBox(
                         width: double.infinity,
@@ -140,6 +188,41 @@ class ProfileCreationState extends State<ProfileCreation> {
                       )
                     ],
                   )))),
+    );
+  }
+}
+
+class filterChipWidget extends StatefulWidget {
+  final String chipName;
+
+  filterChipWidget({Key key, this.chipName}) : super(key: key);
+
+  @override
+  _filterChipWidgetState createState() => _filterChipWidgetState();
+}
+
+class _filterChipWidgetState extends State<filterChipWidget> {
+  var _isSelected = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return FilterChip(
+      label: Text(widget.chipName),
+      labelStyle: TextStyle(
+          color: Color(0xff005ce6),
+          fontSize: 16.0,
+          fontWeight: FontWeight.bold),
+      selected: _isSelected,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(30.0),
+      ),
+      backgroundColor: Color(0xffededed),
+      onSelected: (isSelected) {
+        setState(() {
+          _isSelected = isSelected;
+        });
+      },
+      selectedColor: Color(0xffb3d1ff),
     );
   }
 }
