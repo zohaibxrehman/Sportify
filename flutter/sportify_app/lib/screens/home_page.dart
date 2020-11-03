@@ -36,13 +36,10 @@ class HomePage extends StatelessWidget {
         ),
         actions: <Widget>[
           Padding(
-            padding: const EdgeInsets.fromLTRB(0.0, 0.0, 20.0, 0.0),
+            padding: const EdgeInsets.fromLTRB(0.0, 0.0, 15.0, 0.0),
             child: IconButton(
-              icon: Icon(
-                Icons.chat_bubble,
-                color: Colors.black,
-                size: 45.0,
-              ),
+              icon: Image.asset('images/chat_button.png'),
+              iconSize: 45.0,
               onPressed: () => {
                 Navigator.push(
                   context,
