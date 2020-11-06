@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'test_data.dart';
+import 'package:dio/dio.dart';
+import 'dart:io';
+import 'dart:convert';
 
 class ChatsPage extends StatefulWidget {
   @override
@@ -13,15 +15,17 @@ class ChatsPageState extends State<ChatsPage> {
   TextEditingController editingController = TextEditingController();
   @override
   void initState() {
-    items.addAll(CHAT_DATA);
+    _getRequest();
     super.initState();
   }
 
+  var data = List<dynamic>();
   var chatIndex = 0;
   var items = List<dynamic>();
+
   void filterSearchResults(String query) {
     List<dynamic> dummySearchList = List<dynamic>();
-    dummySearchList.addAll(CHAT_DATA);
+    returnData(dummySearchList);
 
     if (query.isNotEmpty) {
       List<dynamic> dummyListData = List<dynamic>();
@@ -41,7 +45,7 @@ class ChatsPageState extends State<ChatsPage> {
     } else {
       setState(() {
         items.clear();
-        items.addAll(CHAT_DATA);
+        returnData(items);
       });
     }
   }
@@ -137,5 +141,48 @@ class ChatsPageState extends State<ChatsPage> {
         ),
       ),
     );
+  }
+
+  returnData(List<dynamic> dataList) {
+    data.forEach((element) {
+      dataList.add(element);
+    });
+  }
+
+  String _localhost() {
+    if (Platform.isAndroid)
+      return 'http://10.0.2.2:3000/events/groupChatTestData';
+    else // for iOS simulator
+      return 'http://localhost:3000/events/groupChatTestData';
+  }
+
+  _getRequest() async {
+    final Dio dio = new Dio();
+    try {
+      var response = await dio.get(_localhost());
+      var count = response.data.length;
+
+      if (data.length == 0) {
+        setState(() {
+          for (int i = 1; i <= count; i++) {
+            data.add(jsonDecode(response.toString())['eventid${i.toString()}']);
+          }
+        });
+        returnData(items);
+      } else {
+        data.clear();
+        print("hello");
+        setState(() {
+          for (int i = 1; i <= count; i++) {
+            data.add(jsonDecode(response.toString())['eventid${i.toString()}']);
+          }
+        });
+      }
+
+      if (response.statusCode != 200)
+        throw Exception('Failed to link with backend');
+    } on DioError catch (e) {
+      print(e);
+    }
   }
 }
