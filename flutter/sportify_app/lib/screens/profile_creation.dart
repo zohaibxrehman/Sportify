@@ -100,13 +100,29 @@ class ProfileCreationState extends State<ProfileCreation> {
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(
+        toolbarHeight: 65.0,
+        leading: (IconButton(
+          icon: Padding(
+            padding: const EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
+            child: Icon(
+              Icons.arrow_back_ios,
+              color: Colors.black,
+              size: 40.0,
+            ),
+          ),
+          onPressed: () => {
+            Navigator.pop(
+              context,
+            )
+          },
+        )),
+        centerTitle: true,
         title: Text("Profile",
             style: TextStyle(
               fontSize: 32,
               color: Colors.black,
             )),
         backgroundColor: Colors.white,
-        elevation: 0,
         brightness: Brightness.light,
       ),
       body: Container(
@@ -147,16 +163,16 @@ class ProfileCreationState extends State<ProfileCreation> {
                           filterChipWidget(chipName: 'Tennis'),
                           filterChipWidget(chipName: 'Basketball'),
                           filterChipWidget(chipName: 'Badminton'),
-                          filterChipWidget(chipName: 'PingPong'),
-                          filterChipWidget(chipName: 'PingPong'),
-                          filterChipWidget(chipName: 'PingPong'),
-                          filterChipWidget(chipName: 'PingPong'),
-                          filterChipWidget(chipName: 'PingPong'),
-                          filterChipWidget(chipName: 'PingPong'),
-                          filterChipWidget(chipName: 'PingPong'),
-                          filterChipWidget(chipName: 'PingPong'),
-                          filterChipWidget(chipName: 'PingPong'),
-                          filterChipWidget(chipName: 'PingPong'),
+                          filterChipWidget(chipName: 'Volleyball'),
+                          filterChipWidget(chipName: 'Baseball'),
+                          filterChipWidget(chipName: 'Bowling'),
+                          filterChipWidget(chipName: 'Table Tennis'),
+                          filterChipWidget(chipName: 'Golf'),
+                          filterChipWidget(chipName: 'Hockey'),
+                          filterChipWidget(chipName: 'Field Hockey'),
+                          filterChipWidget(chipName: 'Softball'),
+                          filterChipWidget(chipName: 'Skate Boarding'),
+                          filterChipWidget(chipName: 'Rowing'),
                         ],
                       ),
                       categoryDivider(),

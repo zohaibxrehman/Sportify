@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:sportify_app/screens/profile_page.dart';
+import 'package:sportify_app/screens/profile_creation.dart';
 import 'package:sportify_app/screens/event_creation_page.dart';
 import 'package:sportify_app/screens/chats_page.dart';
 
@@ -22,7 +22,7 @@ class HomePage extends StatelessWidget {
           onPressed: () => {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => ProfilePage()),
+              MaterialPageRoute(builder: (context) => ProfileCreation()),
             )
           },
         )),
