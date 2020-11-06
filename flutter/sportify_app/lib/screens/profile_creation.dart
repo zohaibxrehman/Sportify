@@ -187,7 +187,7 @@ class ProfileCreationState extends State<ProfileCreation> {
                         height: 50,
                         child: RaisedButton(
                             child: Text(
-                              'Edit Profile',
+                              'Save Profile',
                               style:
                                   TextStyle(color: Colors.white, fontSize: 25),
                             ),
