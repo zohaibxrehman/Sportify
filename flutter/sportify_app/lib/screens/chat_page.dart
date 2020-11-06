@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 
-var loggedInUser = "vishnu";
+var loggedInUser = "Z1Ranger";
 
 class ChatScreen extends StatefulWidget {
   static const String id = 'chat_screen';
@@ -52,17 +52,17 @@ class _ChatScreenState extends State<ChatScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             StreamBuilder<QuerySnapshot>(
-              stream: _fireStore.collection('messages').snapshots(),
+              stream: _fireStore.collection('messages').orderBy('datetime', descending: true).snapshots(),
               // ignore: missing_return
               builder: (context, snapshot) {
                 List<MessageBubble> messageWidgets = [];
                 if (!snapshot.hasData) {
                   return Column();
                 }
-                final messages = snapshot.data.docs.reversed;
+                final messages = snapshot.data.docs;
                 for (var message in messages) {
                   bool isUser;
-
+                  print(message['sender'] + ': ' + message['text']);
                   if (message['sender'] == loggedInUser) {
                     isUser = true;
                   } else {
@@ -109,7 +109,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     onPressed: () {
                       msgController.clear();
                       _fireStore.collection('messages').add(
-                          {'text': messageText, 'sender': 'vishnu'});
+                          {'text': messageText, 'sender': loggedInUser, 'datetime': DateTime.now().toUtc(),});
 
                     },
                     child: Text(
