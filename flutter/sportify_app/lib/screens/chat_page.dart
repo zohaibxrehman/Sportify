@@ -112,14 +112,7 @@ class _ChatScreenState extends State<ChatScreen> {
                           {'text': messageText, 'sender': loggedInUser, 'datetime': DateTime.now().toUtc(),});
 
                     },
-                    child: Text(
-                      'Send',
-                      style: TextStyle(
-                        color: Color(0xFF2F80ED),
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18.0,
-                      ),
-                    ),
+                    child: Icon(Icons.send, color: Color(0xFF2F80ED),),
                   ),
                 ],
               ),
