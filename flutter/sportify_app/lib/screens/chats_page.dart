@@ -162,22 +162,12 @@ class ChatsPageState extends State<ChatsPage> {
       var response = await dio.get(_localhost());
       var count = response.data.length;
 
-      if (data.length == 0) {
-        setState(() {
-          for (int i = 1; i <= count; i++) {
-            data.add(jsonDecode(response.toString())['eventid${i.toString()}']);
-          }
-        });
-        returnData(items);
-      } else {
-        data.clear();
-        print("hello");
-        setState(() {
-          for (int i = 1; i <= count; i++) {
-            data.add(jsonDecode(response.toString())['eventid${i.toString()}']);
-          }
-        });
-      }
+      setState(() {
+        for (int i = 1; i <= count; i++) {
+          data.add(jsonDecode(response.toString())['eventid${i.toString()}']);
+        }
+      });
+      returnData(items);
 
       if (response.statusCode != 200)
         throw Exception('Failed to link with backend');
