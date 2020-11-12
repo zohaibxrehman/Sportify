@@ -110,10 +110,21 @@ app.get('/events/:id', (req, res) => {
 })
 
 app.get('/user/:id/events', (req, res) => {
-  const eventRef = firebase.database().ref('/users/' + req.params.id + '/events');
-  eventRef.once('value').then(function(snapshot) {
-    return res.send(Object.keys(snapshot.val()));
+  const userRef = firebase.database().ref('/users/' + req.params.id);
+  userRef.once('value').then(function(snapshot) {
+    if(!snapshot.val()){
+      res.sendStatus(404)
+    }
+    if (snapshot.hasChild('events')) {
+      const eventRef = firebase.database().ref('/users/' + req.params.id + '/events')
+      eventRef.once('value').then(function(snapshot){
+        return res.send(Object.keys(snapshot.val()));
+      })
+    } else {
+      return res.send([]);
+    }
   }).catch(function(error) {
+    console.log('not found bro')
     return res.sendStatus(404);
   });
 })
