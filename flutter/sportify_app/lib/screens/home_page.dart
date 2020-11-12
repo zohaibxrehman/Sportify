@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:sportify_app/screens/profile_page.dart';
+import 'package:sportify_app/screens/profile_creation.dart';
 import 'package:sportify_app/screens/event_creation_page.dart';
 import 'package:sportify_app/screens/chats_page.dart';
 
@@ -22,7 +22,7 @@ class HomePage extends StatelessWidget {
           onPressed: () => {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => ProfilePage()),
+              MaterialPageRoute(builder: (context) => ProfileCreation()),
             )
           },
         )),
@@ -36,13 +36,10 @@ class HomePage extends StatelessWidget {
         ),
         actions: <Widget>[
           Padding(
-            padding: const EdgeInsets.fromLTRB(0.0, 0.0, 20.0, 0.0),
+            padding: const EdgeInsets.fromLTRB(0.0, 0.0, 15.0, 0.0),
             child: IconButton(
-              icon: Icon(
-                Icons.chat_bubble,
-                color: Colors.black,
-                size: 45.0,
-              ),
+              icon: Image.asset('images/chat_button.png'),
+              iconSize: 45.0,
               onPressed: () => {
                 Navigator.push(
                   context,
@@ -62,7 +59,7 @@ class HomePage extends StatelessWidget {
         onPressed: () => {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => EventCreationPage()),
+            MaterialPageRoute(builder: (context) => EventCreation()),
           )
         },
       ),

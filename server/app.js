@@ -42,6 +42,7 @@ app.post('/user/new', (req, res) => {
     bio: bio,
     sportsInterests: sportsInterests,
     favoriteTeam: favoriteTeam,
+    events: false
   };
 
   let updates = {};
@@ -67,17 +68,25 @@ app.post('/event/new', (req, res) => {
     return res.sendStatus(400);
   }
 
+  const users = {};
+  users[utorid] = true;
+
   const postData = {
-    utorid : utorid,
+    owner: utorid, 
+    users: users,
     title: title,
     description: description,
     location: location,
   };
 
-  let updates = {};
+  let eventUpdates = {};
   const newEventId = firebase.database().ref().child('events').push().key;
-  updates['/events/' + newEventId] = postData;
-  firebase.database().ref().update(updates);
+  eventUpdates['/events/' + newEventId] = postData;
+  firebase.database().ref().update(eventUpdates);
+
+  let userUpdates = {};
+  userUpdates['/users/' + utorid + '/events/' + newEventId] = true;
+  firebase.database().ref().update(userUpdates);
 
   return res.sendStatus(200);
 })
@@ -98,6 +107,34 @@ app.get('/events/:id', (req, res) => {
   }).catch(function(error) {
     return res.sendStatus(404);
   });
+})
+
+app.get('/user/:id/events', (req, res) => {
+  const eventRef = firebase.database().ref('/users/' + req.params.id + '/events');
+  eventRef.once('value').then(function(snapshot) {
+    return res.send(Object.keys(snapshot.val()));
+  }).catch(function(error) {
+    return res.sendStatus(404);
+  });
+})
+
+app.put('/event/:eventId/newUser/:userId', (req, res) => {
+  const utorid = req.params.userId
+  const eventId = req.params.eventId
+ 
+  if (!(utorid && eventId)) {
+    return res.sendStatus(400);
+  }
+
+  let eventUpdates = {};
+  eventUpdates['/events/' + eventId + '/users/' + utorid] = true;
+  firebase.database().ref().update(eventUpdates);
+
+  let userUpdates = {};
+  userUpdates['/users/' + utorid + '/events/' + eventId] = true;
+  firebase.database().ref().update(userUpdates);
+
+  return res.sendStatus(200);
 })
 
 app.listen(port, () => {
