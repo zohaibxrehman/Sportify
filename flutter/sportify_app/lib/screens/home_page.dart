@@ -76,7 +76,30 @@ class HomePage extends StatelessWidget {
               "7-8 more people.",
           author: 'Angela',
           date: 'Sept. 11, 2020',
-        ), ],
+        ),
+          EventWidget(
+            image: 'cricket.png',
+            event: 'Basketball Event',
+            location: 'High Park',
+            description: "I am hosting a friendly basketball match at high park. "
+                "I will be bringing the basketball and a carton full of juice boxes!"
+                "My friends will also be attending. We are looking for"
+                "7-8 more people.",
+            author: 'Angela',
+            date: 'Sept. 11, 2020',
+          ),
+          EventWidget(
+            image: 'cricket.png',
+            event: 'Basketball Event',
+            location: 'High Park',
+            description: "I am hosting a friendly basketball match at high park. "
+                "I will be bringing the basketball and a carton full of juice boxes!"
+                "My friends will also be attending. We are looking for"
+                "7-8 more people.",
+            author: 'Angela',
+            date: 'Sept. 11, 2020',
+          ),
+        ],
       ),
     );
   }
@@ -95,10 +118,10 @@ class EventWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10),
+      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       child: Container(
         color: Colors.white,
-        padding: EdgeInsets.symmetric(horizontal: 15),
+        padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
         child: Column(
           children: [Container(height: 100,
             margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
