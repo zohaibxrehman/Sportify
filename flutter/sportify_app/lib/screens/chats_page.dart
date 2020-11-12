@@ -211,7 +211,11 @@ class ChatsPageState extends State<ChatsPage> {
         } else if (difference < 168) {
           newDate = DateFormat('EEEE').format(tempDate);
         } else {
-          newDate = new DateFormat.MMMd().format(tempDate);
+          if (now.year == tempDate.year) {
+            newDate = new DateFormat.MMMd().format(tempDate);
+          } else {
+            newDate = new DateFormat.yMMMd().format(tempDate);
+          }
         }
         data[i]['date'] = newDate;
       }
