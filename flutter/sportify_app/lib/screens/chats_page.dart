@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'dart:io';
 import 'dart:convert';
+import 'package:intl/intl.dart';
 
 class ChatsPage extends StatefulWidget {
   @override
@@ -162,11 +163,19 @@ class ChatsPageState extends State<ChatsPage> {
       var response = await dio.get(_localhost());
       var count = response.data.length;
 
+      //print(new DateFormat.yMMMd().format(new DateTime.now()));
+      //print(DateTime.now());
+      //DateTime.parse("2020-10-27 13:27");
+
       setState(() {
         for (int i = 1; i <= count; i++) {
           data.add(jsonDecode(response.toString())['eventid${i.toString()}']);
         }
       });
+      data.sort((a, b) {
+        return -a['date'].compareTo(b['date']);
+      });
+      formatDates();
       returnData(items);
 
       if (response.statusCode != 200)
@@ -174,5 +183,38 @@ class ChatsPageState extends State<ChatsPage> {
     } on DioError catch (e) {
       print(e);
     }
+  }
+
+  formatDates() {
+    var tempDate;
+    var now = DateTime.now();
+    var difference;
+    var newDate;
+    var minutes;
+
+    setState(() {
+      for (int i = 0; i < data.length; i++) {
+        tempDate = DateTime.parse(data[i]['date']);
+        difference = now.difference(tempDate).inHours;
+
+        if (difference < 24 && now.day == tempDate.day) {
+          minutes = now.difference(tempDate).inMinutes;
+          if (minutes < 60) {
+            if (minutes < 1) {
+              newDate = 'now';
+            } else {
+              newDate = minutes.toString() + ' m';
+            }
+          } else {
+            newDate = difference.toString() + ' h';
+          }
+        } else if (difference < 168) {
+          newDate = DateFormat('EEEE').format(tempDate);
+        } else {
+          newDate = new DateFormat.MMMd().format(tempDate);
+        }
+        data[i]['date'] = newDate;
+      }
+    });
   }
 }
