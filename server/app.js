@@ -137,6 +137,32 @@ app.put('/event/:eventId/newUser/:userId', (req, res) => {
   return res.sendStatus(200);
 })
 
+app.delete('/event/:id', (req, res) => {
+  console.log('DELETE ROUTE')
+  const eventId = req.params.id
+  if (!eventId) {
+    return res.sendStatus(400);
+  }
+
+  const eventRef = firebase.database().ref('/events/' + eventId);
+  const usersRef = firebase.database().ref('/events/' + eventId + '/users');
+
+  usersRef.once('value').then(function(snapshot) {
+    const userIds = Object.keys(snapshot.val());
+    userIds.forEach((userId) => {
+      console.log(userId)
+      let userEventRef = firebase.database().ref('/users/' + userId + '/events/' + eventId);
+      userEventRef.remove()
+    });
+    eventRef.remove()
+    return res.sendStatus(200);
+  }).catch(function(error) {
+    return res.sendStatus(404);
+  });
+
+  return res.sendStatus(200);
+})
+
 app.listen(port, () => {
   console.log(`Sportify server listening at http://localhost:${port}`)
 })
