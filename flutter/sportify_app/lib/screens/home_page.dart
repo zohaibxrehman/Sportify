@@ -63,6 +63,101 @@ class HomePage extends StatelessWidget {
           )
         },
       ),
+      body: ListView(
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
+        children: [EventWidget(
+          image: 'cricket.png',
+          event: 'Basketball Event',
+          location: 'High Park',
+          description: "I am hosting a friendly basketball match at high park. "
+              "I will be bringing the basketball and a carton full of juice boxes!"
+              "My friends will also be attending. We are looking for"
+              "7-8 more people.",
+          author: 'Angela',
+          date: 'Sept. 11, 2020',
+        ), ],
+      ),
     );
   }
 }
+
+class EventWidget extends StatelessWidget {
+  final image;
+  final event;
+  final location;
+  final description;
+  final author;
+  final date;
+
+  EventWidget({this.image, this.event, this.location, this.description, this.author,this.date});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 10),
+      child: Container(
+        color: Colors.white,
+        padding: EdgeInsets.symmetric(horizontal: 15),
+        child: Column(
+          children: [Container(height: 100,
+            margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                fit: BoxFit.contain,
+                image: AssetImage('images/cricket.png'),
+              ),
+              borderRadius: BorderRadius.circular(20),
+            ),
+          ),
+            SizedBox(height: 10,),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(event, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),),
+                Text(location, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),),
+              ],
+            ),
+            Container(
+              margin: EdgeInsets.symmetric(vertical: 10),
+              child: Text(description),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('- $author', style: TextStyle(fontSize: 16),),
+                Text(date, style: TextStyle(fontSize: 16),),
+              ],
+            ),
+            SizedBox(height: 15,),
+            Row(
+              children: [
+                Expanded(
+                  child: GestureDetector(
+                    onTap: (){},
+                    child: Container(
+                      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                      child: Text('Attend', style: TextStyle(color: Colors.white),), decoration: new BoxDecoration(
+                      borderRadius: new BorderRadius.circular(10.0),
+                      color: Colors.lightBlue,
+                    ),),),
+                ),
+                SizedBox(width: 5,),
+                Expanded(
+                  child: GestureDetector(
+                    onTap: (){},
+                    child: Container(
+                      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                      child: Text('Chat', style: TextStyle(color: Colors.white),), decoration: new BoxDecoration(
+                      borderRadius: new BorderRadius.circular(10.0),
+                      color: Colors.lightGreen,
+                    ),),),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),);
+  }
+}
+
