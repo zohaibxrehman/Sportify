@@ -32,6 +32,7 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFFf1f1f1),
       appBar: AppBar(
         centerTitle: true,
         leading: null,
@@ -88,33 +89,36 @@ class _ChatScreenState extends State<ChatScreen> {
                   top: BorderSide(color: Color(0xFF2F80ED), width: 2.0),
                 ),
               ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Expanded(
-                    child: TextField(
-                      style: TextStyle(color: Colors.black),
-                      onChanged: (value) {
-                        messageText = value;
-                        //Do something with the user input.
-                      },
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-                        hintText: 'Type your message here...',
-                        border: InputBorder.none,
+              child: Container(
+                color: Colors.white,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Expanded(
+                      child: TextField(
+                        style: TextStyle(color: Colors.black),
+                        onChanged: (value) {
+                          messageText = value;
+                          //Do something with the user input.
+                        },
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                          hintText: 'Type your message here...',
+                          border: InputBorder.none,
+                        ),
                       ),
                     ),
-                  ),
-                  FlatButton(
-                    onPressed: () {
-                      msgController.clear();
-                      _fireStore.collection('messages').add(
-                          {'text': messageText, 'sender': loggedInUser, 'datetime': DateTime.now().toUtc(),});
+                    FlatButton(
+                      onPressed: () {
+                        msgController.clear();
+                        _fireStore.collection('messages').add(
+                            {'text': messageText, 'sender': loggedInUser, 'datetime': DateTime.now().toUtc(),});
 
-                    },
-                    child: Icon(Icons.send, color: Color(0xFF2F80ED),),
-                  ),
-                ],
+                      },
+                      child: Icon(Icons.send, color: Color(0xFF2F80ED),),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
@@ -139,6 +143,7 @@ class MessageBubble extends StatelessWidget {
         crossAxisAlignment:
         isUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: <Widget>[
+          isUser ? Text(''):
           Text(
             messageSender,
             style: TextStyle(fontSize: 12, color: Colors.grey),
