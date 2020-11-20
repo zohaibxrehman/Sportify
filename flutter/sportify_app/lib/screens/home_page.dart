@@ -138,7 +138,7 @@ class EventWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      padding: EdgeInsets.fromLTRB(20, 22, 20, 5),
       child: Container(
         decoration: new BoxDecoration(
           borderRadius: new BorderRadius.circular(15.0),
@@ -178,7 +178,7 @@ class EventWidget extends StatelessWidget {
 
             Container(
               margin: EdgeInsets.symmetric(vertical: 10),
-              child: Text(description),
+              child: Text(description, overflow: TextOverflow.ellipsis, maxLines: 3,),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
