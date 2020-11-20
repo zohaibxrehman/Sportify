@@ -84,9 +84,9 @@ app.put('/user/:id', (req, res) => {
 })
 
 app.post('/event/new', (req, res) => {
-  const {utorid, title, description, location} = req.body;
+  const {utorid, title, description, location, date, sport} = req.body;
 
-  if (!(utorid && title && description && location)) {
+  if (!(utorid && title && description && location && date && sport)) {
     return res.sendStatus(400);
   }
 
@@ -99,6 +99,8 @@ app.post('/event/new', (req, res) => {
     title: title,
     description: description,
     location: location,
+    date: date,
+    sport: sport
   };
 
   let eventUpdates = {};
@@ -132,10 +134,10 @@ app.get('/event/:id', (req, res) => {
 })
 
 app.put('/event/:id', (req, res) => {
-  const {title, description, location} = req.body;
+  const {title, description, location, date, sport} = req.body;
   const eventId = req.params.id;
 
-  if (!(title && description && location)) {
+  if (!(title && description && location && date && sport)) {
     return res.sendStatus(400);
   }
 
@@ -143,6 +145,8 @@ app.put('/event/:id', (req, res) => {
     title: title,
     description: description,
     location: location,
+    date: date,
+    sport: sport
   };
 
   let eventUpdates = {};
