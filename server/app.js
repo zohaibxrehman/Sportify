@@ -100,13 +100,36 @@ app.get('/events', (req, res) => {
   });
 })
 
-app.get('/events/:id', (req, res) => {
+app.get('/event/:id', (req, res) => {
   const eventRef = firebase.database().ref('/events/' + req.params.id);
   eventRef.once('value').then(function(snapshot) {
     return res.send(snapshot.val());
   }).catch(function(error) {
     return res.sendStatus(404);
   });
+})
+
+app.put('/event/:id', (req, res) => {
+  const {title, description, location} = req.body;
+  const eventId = req.params.id;
+
+  if (!(title && description && location)) {
+    return res.sendStatus(400);
+  }
+
+  const putData = {
+    title: title,
+    description: description,
+    location: location,
+  };
+
+  let eventUpdates = {};
+  Object.keys(putData).forEach((key) => {
+    eventUpdates['/events/' + eventId + '/' + key] = putData[key];
+  })
+  firebase.database().ref().update(eventUpdates);
+
+  return res.sendStatus(200);
 })
 
 app.get('/user/:id/events', (req, res) => {
