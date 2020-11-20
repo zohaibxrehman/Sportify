@@ -88,7 +88,7 @@ class EventWidget extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
       child: Container(
         decoration: new BoxDecoration(
-            borderRadius: new BorderRadius.circular(10.0),
+            borderRadius: new BorderRadius.circular(15.0),
             color: Colors.white),
         padding: EdgeInsets.symmetric(horizontal: 17, vertical: 15),
         child: Column(
@@ -125,7 +125,7 @@ class EventWidget extends StatelessWidget {
               child: Text(event, style: TextStyle(fontSize: 16, color: Colors.blueGrey),),),
 
             Container(
-              margin: EdgeInsets.symmetric(vertical: 35),
+              margin: EdgeInsets.symmetric(vertical: 20),
               child: Text(description, style: TextStyle(fontSize: 15),),
             ),
             Row(
@@ -135,23 +135,48 @@ class EventWidget extends StatelessWidget {
                 Text(date, style: TextStyle(fontSize: 16),),
               ],
             ),
-            GestureDetector(
-              onTap: (){},
-              child: Container(
-                margin: EdgeInsets.symmetric(vertical: 50),
-                width: 150,
-                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.edit, color: Colors.white, size: 13,),
-                    SizedBox(width: 5,),
-                    Text('Edit', style: TextStyle(color: Colors.white),),
-                  ],
-                ), decoration: new BoxDecoration(
-                borderRadius: new BorderRadius.circular(10.0),
-                color: Colors.deepOrange,
-              ),),),
+            SizedBox(height: 25,),
+            Row(
+              children: [
+                Expanded(
+                  child: GestureDetector(
+                    onTap: (){},
+                    child: Container(
+                      alignment: Alignment.center,
+                      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                      child:  Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.edit, color: Colors.white, size: 13,),
+                          SizedBox(width: 5,),
+                          Text('Edit', style: TextStyle(color: Colors.white),),
+                        ],
+                      ), decoration: new BoxDecoration(
+                      borderRadius: new BorderRadius.circular(10.0),
+                      color: Colors.deepOrangeAccent,
+                    ),),),
+                ),
+                SizedBox(width: 5,),
+                Expanded(
+                  child: GestureDetector(
+                    onTap: (){},
+                    child: Container(
+                      alignment: Alignment.center,
+                      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.delete, color: Colors.white, size: 13,),
+                          SizedBox(width: 5,),
+                          Text('Delete', style: TextStyle(color: Colors.white),),
+                        ],
+                      ), decoration: new BoxDecoration(
+                      borderRadius: new BorderRadius.circular(10.0),
+                      color: Colors.redAccent,
+                    ),),),
+                ),
+              ],
+            ),
           ],
         ),
       ),);

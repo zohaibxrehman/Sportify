@@ -141,7 +141,7 @@ class EventWidget extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       child: Container(
         decoration: new BoxDecoration(
-          borderRadius: new BorderRadius.circular(10.0),
+          borderRadius: new BorderRadius.circular(15.0),
         color: Colors.white),
         padding: EdgeInsets.symmetric(horizontal: 17, vertical: 15),
         child: Column(
@@ -187,13 +187,14 @@ class EventWidget extends StatelessWidget {
                 Text(date, style: TextStyle(fontSize: 16),),
               ],
             ),
-            SizedBox(height: 15,),
+            SizedBox(height: 25,),
             Row(
               children: [
                 Expanded(
                   child: GestureDetector(
                     onTap: (){},
                     child: Container(
+                      alignment: Alignment.center,
                       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                       child: Text('Attend', style: TextStyle(color: Colors.white),), decoration: new BoxDecoration(
                       borderRadius: new BorderRadius.circular(10.0),
@@ -205,6 +206,7 @@ class EventWidget extends StatelessWidget {
                   child: GestureDetector(
                     onTap: (){},
                     child: Container(
+                      alignment: Alignment.center,
                       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                       child: Text('Chat', style: TextStyle(color: Colors.white),), decoration: new BoxDecoration(
                       borderRadius: new BorderRadius.circular(10.0),
