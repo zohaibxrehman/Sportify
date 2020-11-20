@@ -8,6 +8,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFFf1f1f1),
       appBar: AppBar(
         toolbarHeight: 65.0,
         leading: (IconButton(
@@ -68,6 +69,7 @@ class HomePage extends StatelessWidget {
         shrinkWrap: true,
         children: [EventWidget(
           image: 'cricket.png',
+          title: 'Football at park',
           event: 'Basketball Event',
           location: 'High Park',
           description: "I am hosting a friendly basketball match at high park. "
@@ -79,6 +81,7 @@ class HomePage extends StatelessWidget {
         ),
           EventWidget(
             image: 'cricket.png',
+            title: 'Football at park',
             event: 'Basketball Event',
             location: 'High Park',
             description: "I am hosting a friendly basketball match at high park. "
@@ -90,6 +93,7 @@ class HomePage extends StatelessWidget {
           ),
           EventWidget(
             image: 'cricket.png',
+            title: 'Football at park',
             event: 'Basketball Event',
             location: 'High Park',
             description: "I am hosting a friendly basketball match at high park. "
@@ -106,6 +110,7 @@ class HomePage extends StatelessWidget {
 }
 
 class EventWidget extends StatelessWidget {
+  final title;
   final image;
   final event;
   final location;
@@ -113,15 +118,17 @@ class EventWidget extends StatelessWidget {
   final author;
   final date;
 
-  EventWidget({this.image, this.event, this.location, this.description, this.author,this.date});
+  EventWidget({this.image, this.title, this.event, this.location, this.description, this.author,this.date});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       child: Container(
-        color: Colors.white,
-        padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+        decoration: new BoxDecoration(
+          borderRadius: new BorderRadius.circular(10.0),
+        color: Colors.white),
+        padding: EdgeInsets.symmetric(horizontal: 17, vertical: 15),
         child: Column(
           children: [Container(height: 100,
             margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
@@ -137,10 +144,15 @@ class EventWidget extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(event, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),),
-                Text(location, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),),
+                Text(title, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
+                Text(location, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
               ],
             ),
+            SizedBox(height: 3),
+            Container(
+              alignment: Alignment.topLeft,
+              child: Text(event, style: TextStyle(fontSize: 15, color: Colors.blueGrey),),),
+
             Container(
               margin: EdgeInsets.symmetric(vertical: 10),
               child: Text(description),
