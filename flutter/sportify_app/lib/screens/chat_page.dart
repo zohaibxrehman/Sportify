@@ -113,7 +113,6 @@ class _ChatScreenState extends State<ChatScreen> {
                         msgController.clear();
                         _fireStore.collection('messages').add(
                             {'text': messageText, 'sender': loggedInUser, 'datetime': DateTime.now().toUtc(),});
-
                       },
                       child: Icon(Icons.send, color: Color(0xFF2F80ED),),
                     ),
@@ -143,11 +142,12 @@ class MessageBubble extends StatelessWidget {
         crossAxisAlignment:
         isUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: <Widget>[
-          isUser ? Text(''):
+          isUser ? SizedBox(height:0):
           Text(
-            messageSender,
+            '  ' + messageSender,
             style: TextStyle(fontSize: 12, color: Colors.grey),
           ),
+          SizedBox(height: 1,),
           Material(
             borderRadius: isUser ? BorderRadius.only(
                 topLeft: Radius.circular(10.0),
