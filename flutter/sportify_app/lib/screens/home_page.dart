@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sportify_app/screens/home_page_event.dart';
 import 'package:sportify_app/screens/profile_creation.dart';
 import 'package:sportify_app/screens/event_creation_page.dart';
 import 'package:sportify_app/screens/chats_page.dart';
@@ -67,17 +68,31 @@ class HomePage extends StatelessWidget {
       body: ListView(
         scrollDirection: Axis.vertical,
         shrinkWrap: true,
-        children: [EventWidget(
-          image: 'cricket.png',
-          title: 'Football at park',
-          event: 'Basketball Event',
-          location: 'High Park',
-          description: "I am hosting a friendly basketball match at high park. "
-              "I will be bringing the basketball and a carton full of juice boxes!"
-              "My friends will also be attending. We are looking for"
-              "7-8 more people.",
-          author: 'Angela',
-          date: 'Sept. 11, 2020',
+        children: [GestureDetector(
+          onTap: () => {
+            Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => HomePageEvent(
+              'cricket.png', 'Football at park', 'Basketball Event', 'High Park',
+              "I am hosting a friendly basketball match at high park. "
+                  "I will be bringing the basketball and a carton full of juice boxes!"
+                  "My friends will also be attending. We are looking for"
+                  "7-8 more people.", 'Angela', 'Sept. 11, 2020'
+            )),
+           )
+          },
+          child: EventWidget(
+            image: 'cricket.png',
+            title: 'Football at park',
+            event: 'Basketball Event',
+            location: 'High Park',
+            description: "I am hosting a friendly basketball match at high park. "
+                "I will be bringing the basketball and a carton full of juice boxes!"
+                "My friends will also be attending. We are looking for"
+                "7-8 more people.",
+            author: 'Angela',
+            date: 'Sept. 11, 2020',
+          ),
         ),
           EventWidget(
             image: 'cricket.png',

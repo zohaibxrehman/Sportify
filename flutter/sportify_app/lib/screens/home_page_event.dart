@@ -5,6 +5,16 @@ import 'package:sportify_app/screens/event_creation_page.dart';
 import 'package:sportify_app/screens/chats_page.dart';
 
 class HomePageEvent extends StatelessWidget {
+  final image;
+  final title;
+  final event;
+  final location;
+  final description;
+  final author;
+  final date;
+
+  HomePageEvent([this.image, this.title, this.event, this.location, this.description, this.author, this.date]);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,16 +59,13 @@ class HomePageEvent extends StatelessWidget {
         },
       ),
       body: EventWidget(
-        image: 'cricket.png',
-        title: 'Football at park',
-        event: 'Basketball Event',
-        location: 'High Park',
-        description: "I am hosting a friendly basketball match at high park. "
-            "I will be bringing the basketball and a carton full of juice boxes!"
-            "My friends will also be attending. We are looking for"
-            "7-8 more people.",
-        author: 'Angela',
-        date: 'Sept. 11, 2020',
+        image: image,
+        title: title,
+        event: event,
+        location: location,
+        description: description,
+        author: author,
+        date: date,
       ),
     );
   }
