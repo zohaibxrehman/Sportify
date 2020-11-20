@@ -135,6 +135,23 @@ class EventWidget extends StatelessWidget {
                 Text(date, style: TextStyle(fontSize: 16),),
               ],
             ),
+            GestureDetector(
+              onTap: (){},
+              child: Container(
+                margin: EdgeInsets.symmetric(vertical: 50),
+                width: 150,
+                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.edit, color: Colors.white, size: 13,),
+                    SizedBox(width: 5,),
+                    Text('Edit', style: TextStyle(color: Colors.white),),
+                  ],
+                ), decoration: new BoxDecoration(
+                borderRadius: new BorderRadius.circular(10.0),
+                color: Colors.deepOrange,
+              ),),),
           ],
         ),
       ),);
