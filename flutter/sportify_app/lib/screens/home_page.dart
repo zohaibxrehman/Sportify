@@ -144,7 +144,9 @@ class EventWidget extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(title, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
+                Flexible(
+                    child: Text(title, overflow: TextOverflow.ellipsis, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),)),
+                SizedBox(width: 10,),
                 Text(location, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
               ],
             ),
