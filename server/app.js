@@ -59,6 +59,30 @@ app.get('/user/:id', (req, res) => {
   });
 })
 
+app.put('/user/:id', (req, res) => {
+  const {firstName, lastName, sportsInterests, favoriteTeam} = req.body;
+  const utorid = req.params.id;
+
+  if (!(firstName && lastName && sportsInterests && favoriteTeam)) {
+    return res.sendStatus(400);
+  }
+
+  const postData = {
+    utorid: utorid,
+    firstName: firstName,
+    lastName: lastName,
+    sportsInterests: sportsInterests,
+    favoriteTeam: favoriteTeam,
+    events: false
+  };
+
+  let updates = {};
+  updates['/users/' + utorid] = postData;
+  firebase.database().ref().update(updates);
+
+  return res.sendStatus(200);
+})
+
 app.post('/event/new', (req, res) => {
   const {utorid, title, description, location} = req.body;
 
