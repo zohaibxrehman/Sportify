@@ -28,9 +28,9 @@ app.get('/login', (req, res) => {
 })
 
 app.post('/user/new', (req, res) => {
-  const {utorid, firstName, lastName, birthdate, bio, sportsInterests, favoriteTeam} = req.body;
+  const {utorid, firstName, lastName, sportsInterests, favoriteTeam} = req.body;
 
-  if (!(utorid && firstName && lastName && birthdate && bio && sportsInterests && favoriteTeam)) {
+  if (!(utorid && firstName && lastName && sportsInterests && favoriteTeam)) {
     return res.sendStatus(400);
   }
 
@@ -38,8 +38,6 @@ app.post('/user/new', (req, res) => {
     utorid : utorid,
     firstName: firstName,
     lastName: lastName,
-    birthdate: birthdate,
-    bio: bio,
     sportsInterests: sportsInterests,
     favoriteTeam: favoriteTeam,
     events: false
