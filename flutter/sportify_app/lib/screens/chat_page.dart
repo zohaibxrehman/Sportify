@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 var loggedInUser = "Z1Ranger";
+var chatId = 'abc';
 
 class ChatScreen extends StatefulWidget {
   static const String id = 'chat_screen';
@@ -53,7 +54,7 @@ class _ChatScreenState extends State<ChatScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             StreamBuilder<QuerySnapshot>(
-              stream: _fireStore.collection('messages').orderBy('datetime', descending: true).snapshots(),
+              stream: _fireStore.collection('messages').where('id', isEqualTo: chatId).orderBy('datetime', descending: true).snapshots(),
               // ignore: missing_return
               builder: (context, snapshot) {
                 List<MessageBubble> messageWidgets = [];
@@ -112,7 +113,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       onPressed: () {
                         msgController.clear();
                         _fireStore.collection('messages').add(
-                            {'text': messageText, 'sender': loggedInUser, 'datetime': DateTime.now().toUtc(),});
+                            {'id': chatId, 'text': messageText, 'sender': loggedInUser, 'datetime': DateTime.now().toUtc(),});
                       },
                       child: Icon(Icons.send, color: Color(0xFF2F80ED),),
                     ),
