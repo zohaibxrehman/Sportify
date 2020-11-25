@@ -1,11 +1,34 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sportify_app/screens/home_page_event.dart';
 import 'package:sportify_app/screens/profile_creation.dart';
 import 'package:sportify_app/screens/event_creation_page.dart';
 import 'package:sportify_app/screens/chats_page.dart';
+import 'package:http/http.dart';
+import 'dart:io';
+import 'package:dio/dio.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+
+  var data = {};
+
+  var loggedInUser = "Z1Ranger";
+
+  @override
+  void initState() {
+    super.initState();
+    _getEventsRequest();
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,66 +88,75 @@ class HomePage extends StatelessWidget {
           )
         },
       ),
-      body: ListView(
+      body: ListView.builder(
         scrollDirection: Axis.vertical,
         shrinkWrap: true,
-        children: [GestureDetector(
-          onTap: () => {
-            Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => HomePageEvent(
-              'cricket.png', 'Football at park', 'Basketball Event', 'High Park',
-              "I am hosting a friendly basketball match at high park. "
-                  "I will be bringing the basketball and a carton full of juice boxes!"
-                  "My friends will also be attending. We are looking for"
-                  "7-8 more people.", 'Angela', 'Sept. 11, 2020'
-            )),
-           )
-          },
-          child: EventWidget(
-            image: 'cricket.png',
-            title: 'Football at park',
-            event: 'Basketball Event',
-            location: 'High Park',
-            description: "I am hosting a friendly basketball match at high park. "
-                "I will be bringing the basketball and a carton full of juice boxes!"
-                "My friends will also be attending. We are looking for"
-                "7-8 more people.",
-            author: 'Angela',
-            date: 'Sept. 11, 2020',
-          ),
-        ),
-          EventWidget(
-            image: 'cricket.png',
-            title: 'Football at park',
-            event: 'Basketball Event',
-            location: 'High Park',
-            description: "I am hosting a friendly basketball match at high park. "
-                "I will be bringing the basketball and a carton full of juice boxes!"
-                "My friends will also be attending. We are looking for"
-                "7-8 more people.",
-            author: 'Angela',
-            date: 'Sept. 11, 2020',
-          ),
-          EventWidget(
-            image: 'cricket.png',
-            title: 'Football at park',
-            event: 'Basketball Event',
-            location: 'High Park',
-            description: "I am hosting a friendly basketball match at high park. "
-                "I will be bringing the basketball and a carton full of juice boxes!"
-                "My friends will also be attending. We are looking for"
-                "7-8 more people.",
-            author: 'Angela',
-            date: 'Sept. 11, 2020',
-          ),
-        ],
+        itemCount: data.keys.length,
+        itemBuilder: (BuildContext context, int index) {
+          return GestureDetector(
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => HomePageEvent(
+                  '${data[data.keys.elementAt(index)]['sport']}.png', '${data[data.keys.elementAt(index)]['title']}',
+                  '${data[data.keys.elementAt(index)]['sport']} event', '${data[data.keys.elementAt(index)]['location']}',
+                  '${data[data.keys.elementAt(index)]['description']}', '${data[data.keys.elementAt(index)]['owner']}'
+                  , '${data[data.keys.elementAt(index)]['date']}'
+              ),),
+            ),
+            child: EventWidget(
+              image: '${data[data.keys.elementAt(index)]['sport']}.png',
+              title: '${data[data.keys.elementAt(index)]['title']}',
+              event: '${data[data.keys.elementAt(index)]['sport']} event',
+              location: '${data[data.keys.elementAt(index)]['location']}',
+              description: '${data[data.keys.elementAt(index)]['description']}',
+              author: '${data[data.keys.elementAt(index)]['owner']}',
+              date: '${data[data.keys.elementAt(index)]['date']}',
+              eventId: '${data.keys.elementAt(index)}',
+              userId: loggedInUser
+            ),
+          );
+        },
       ),
     );
   }
+
+  _getEventsRequest() async {
+    final Dio dio = new Dio();
+    try {
+      var response = await dio.get(_localhost('/events'));
+      var responseData = response.data;
+      if (response.statusCode != 200)
+        throw Exception('Failed to link with backend');
+      setState(() {
+        data = responseData;
+      });
+    } on DioError catch (e) {
+      print(e);
+    }
+  }
+
 }
 
-class EventWidget extends StatelessWidget {
+_putAttendEvent(eventId, userId) async {
+  final Dio dio = new Dio();
+  try {
+    var response = await dio.put(_localhost('/event/$eventId/newUser/$userId'));
+    print(response.statusCode);
+    if (response.statusCode != 200)
+      throw Exception('Failed to link with backend');
+  } on DioError catch (e) {
+    print(e);
+  }
+}
+
+String _localhost(uri) {
+  if (Platform.isAndroid)
+    return 'http://10.0.2.2:3000' + uri;
+  else // for iOS simulator
+    return 'http://localhost:3000' + uri;
+}
+
+class EventWidget extends StatefulWidget {
   final title;
   final image;
   final event;
@@ -132,8 +164,17 @@ class EventWidget extends StatelessWidget {
   final description;
   final author;
   final date;
+  final eventId;
+  final userId;
 
-  EventWidget({this.image, this.title, this.event, this.location, this.description, this.author,this.date});
+  EventWidget({this.image, this.title, this.event, this.location, this.description, this.author,this.date, this.eventId, this.userId});
+
+  @override
+  _EventWidgetState createState() => _EventWidgetState();
+}
+
+class _EventWidgetState extends State<EventWidget> {
+  var attend = 'Attend';
 
   @override
   Widget build(BuildContext context) {
@@ -160,13 +201,13 @@ class EventWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Flexible(
-                    child: Text(title, overflow: TextOverflow.ellipsis, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),)),
+                    child: Text(widget.title, overflow: TextOverflow.ellipsis, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),)),
                 SizedBox(width: 10,),
                 Row(
                   children: [
                     Icon(Icons.location_on, size: 15,),
                     SizedBox(width: 2),
-                    Text(location, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
+                    Text(widget.location, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
                   ],
                 ),
               ],
@@ -174,17 +215,17 @@ class EventWidget extends StatelessWidget {
             SizedBox(height: 3),
             Container(
               alignment: Alignment.topLeft,
-              child: Text(event, style: TextStyle(fontSize: 15, color: Colors.blueGrey),),),
+              child: Text(widget.event, style: TextStyle(fontSize: 15, color: Colors.blueGrey),),),
 
             Container(
               margin: EdgeInsets.symmetric(vertical: 10),
-              child: Text(description, overflow: TextOverflow.ellipsis, maxLines: 3,),
+              child: Text(widget.description, overflow: TextOverflow.ellipsis, maxLines: 3,),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('- $author', style: TextStyle(fontSize: 16),),
-                Text(date, style: TextStyle(fontSize: 16),),
+                Text('- ${widget.author}', style: TextStyle(fontSize: 16),),
+                Text(widget.date, style: TextStyle(fontSize: 16),),
               ],
             ),
             SizedBox(height: 25,),
@@ -192,11 +233,16 @@ class EventWidget extends StatelessWidget {
               children: [
                 Expanded(
                   child: GestureDetector(
-                    onTap: (){},
+                    onTap: ()  {
+                      _putAttendEvent(widget.eventId, widget.userId);
+                      setState(() {
+                        attend = 'Attending';
+                      });
+                    },
                     child: Container(
                       alignment: Alignment.center,
                       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                      child: Text('Attend', style: TextStyle(color: Colors.white),), decoration: new BoxDecoration(
+                      child: Text(attend, style: TextStyle(color: Colors.white),), decoration: new BoxDecoration(
                       borderRadius: new BorderRadius.circular(10.0),
                       color: Colors.lightBlue,
                     ),),),
@@ -220,4 +266,3 @@ class EventWidget extends StatelessWidget {
       ),);
   }
 }
-
