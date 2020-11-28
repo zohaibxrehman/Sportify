@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sportify_app/screens/chat_page.dart';
 import 'package:sportify_app/screens/home_page_event.dart';
 import 'package:sportify_app/screens/profile_creation.dart';
 import 'package:sportify_app/screens/event_creation_page.dart';
@@ -250,7 +251,14 @@ class _EventWidgetState extends State<EventWidget> {
                 SizedBox(width: 5,),
                 Expanded(
                   child: GestureDetector(
-                    onTap: (){},
+                    onTap: (){
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ChatScreen(
+                           widget.eventId
+                        ),),
+                      );
+                    },
                     child: Container(
                       alignment: Alignment.center,
                       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),

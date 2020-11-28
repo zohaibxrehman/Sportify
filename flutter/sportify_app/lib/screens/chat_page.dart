@@ -6,7 +6,9 @@ import 'package:firebase_core/firebase_core.dart';
 var loggedInUser = "Z1Ranger";
 
 class ChatScreen extends StatefulWidget {
-  static const String id = 'chat_screen';
+  final id;
+
+  ChatScreen([this.id]);
 
   @override
   _ChatScreenState createState() => _ChatScreenState();
