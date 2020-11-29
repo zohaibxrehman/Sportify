@@ -2,44 +2,37 @@ import 'package:http/http.dart';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sportify_app/screens/home_page.dart';
 import 'package:dio/dio.dart';
 
-class ProfileCreation extends StatefulWidget {
+class EditProfile extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return ProfileCreationState();
+    return EditProfileState();
   }
 }
 
-class ProfileCreationState extends State<ProfileCreation> {
+class EditProfileState extends State<EditProfile> {
   String _firstName;
   String _lastName;
-  String _dateOfBirth;
-  String _sportsInterests;
   String _favTeam;
-  List sports = [
-    filterChipWidget(chipName: 'Cricket'),
-    filterChipWidget(chipName: 'Football'),
-    filterChipWidget(chipName: 'Soccer'),
-    filterChipWidget(chipName: 'Tennis'),
-    filterChipWidget(chipName: 'Basketball'),
-    filterChipWidget(chipName: 'Badminton'),
-    filterChipWidget(chipName: 'Volleyball'),
-    filterChipWidget(chipName: 'Baseball'),
-    filterChipWidget(chipName: 'Bowling'),
-    filterChipWidget(chipName: 'Table Tennis'),
-    filterChipWidget(chipName: 'Golf'),
-    filterChipWidget(chipName: 'Hockey'),
-    filterChipWidget(chipName: 'Field Hockey'),
-    filterChipWidget(chipName: 'Softball'),
-    filterChipWidget(chipName: 'Skate Boarding'),
-    filterChipWidget(chipName: 'Rowing')
-  ];
+  List sports = [];
+  final _firstNameController = TextEditingController();
+  final _lastNameController = TextEditingController();
+  final _favTeamController = TextEditingController();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  @override
+  void initState() {
+    super.initState();
+    _makeGetRequest(
+        '1234', _firstNameController, _lastNameController, _favTeamController);
+  }
+
   Widget _buildFirstName() {
     return TextFormField(
+        controller: _firstNameController,
         decoration: InputDecoration(
             hintText: 'First Name',
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
@@ -56,6 +49,7 @@ class ProfileCreationState extends State<ProfileCreation> {
 
   Widget _buildLastName() {
     return TextFormField(
+        controller: _lastNameController,
         decoration: InputDecoration(
             hintText: 'Last Name',
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
@@ -67,26 +61,6 @@ class ProfileCreationState extends State<ProfileCreation> {
         },
         onSaved: (String value) {
           _lastName = value;
-        });
-  }
-
-  Widget _buildDOB() {
-    return null;
-  }
-
-  Widget _buildSportsInterests() {
-    return TextFormField(
-        decoration: InputDecoration(
-            hintText: 'Sports You Play',
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
-        validator: (String value) {
-          if (value.isEmpty) {
-            return 'Enter Sports';
-          }
-          return null;
-        },
-        onSaved: (String value) {
-          _sportsInterests = value;
         });
   }
 
@@ -102,6 +76,7 @@ class ProfileCreationState extends State<ProfileCreation> {
 
   Widget _buildFavTeam() {
     return TextFormField(
+        controller: _favTeamController,
         decoration: InputDecoration(
             hintText: 'Favorite Team',
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
@@ -116,9 +91,54 @@ class ProfileCreationState extends State<ProfileCreation> {
         });
   }
 
+  _makeGetRequest(id, TextEditingController firstCont,
+      TextEditingController lastCont, TextEditingController favTeamCont) async {
+    final Dio dio = new Dio();
+    try {
+      var response = await dio.get(_localhost('/user/' + id));
+      // print(response.data);
+      // firstCont.text = response.data['firstName'].toString();
+      // lastCont.text = response.data['lastName'].toString();
+      // favTeamCont.text = response.data['favoriteTeam'].toString();
+      // var sportsList = [];
+      // for (var i = 0; i < 16; i++) {
+      //   print(response.data['sportsInterests'][i][0]);
+      //   sportsList.add(filterChipWidget(
+      //     chipName: response.data['sportsInterests'][i][0],
+      //     selected: response.data['sportsInterests'][i][1],
+      //   ));
+      // }
+      //
+      // sports = sportsList;
+
+      if (response.statusCode != 200)
+        throw Exception('Failed to link with backend');
+      print(response.data);
+      firstCont.text = response.data['firstName'].toString();
+      lastCont.text = response.data['lastName'].toString();
+      favTeamCont.text = response.data['favoriteTeam'].toString();
+      var sportsList = [];
+      for (var i = 0; i < 16; i++) {
+        print(response.data['sportsInterests'][i][0]);
+        sportsList.add(filterChipWidget(
+          chipName: response.data['sportsInterests'][i][0],
+          selected: response.data['sportsInterests'][i][1],
+        ));
+      }
+      setState(() {
+        sports = sportsList;
+      });
+
+      return response;
+    } on DioError catch (e) {
+      print(e);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
+
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 65.0,
@@ -193,7 +213,7 @@ class ProfileCreationState extends State<ProfileCreation> {
                         height: 50,
                         child: RaisedButton(
                             child: Text(
-                              'Create Profile',
+                              'Save Profile',
                               style:
                                   TextStyle(color: Colors.white, fontSize: 25),
                             ),
@@ -211,13 +231,19 @@ class ProfileCreationState extends State<ProfileCreation> {
                                 retrievedData
                                     .add([sport.chipName, sport.selected]);
 
-                              _makePostRequest({
+                              _makePutRequest({
                                 "utorid": 1234,
                                 "firstName": _firstName,
                                 "lastName": _lastName,
                                 "sportsInterests": retrievedData,
                                 "favoriteTeam": _favTeam,
-                              });
+                              }, "1234");
+
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => HomePage()),
+                              );
                             }),
                       )
                     ],
@@ -228,16 +254,16 @@ class ProfileCreationState extends State<ProfileCreation> {
 
 class filterChipWidget extends StatefulWidget {
   final String chipName;
-  var selected = false;
+  var selected;
 
-  filterChipWidget({Key key, this.chipName}) : super(key: key);
+  filterChipWidget({Key key, this.chipName, this.selected}) : super(key: key);
 
   @override
   _filterChipWidgetState createState() => _filterChipWidgetState();
 }
 
 class _filterChipWidgetState extends State<filterChipWidget> {
-  var _isSelected = false;
+  //var _isSelected = false;
 
   @override
   Widget build(BuildContext context) {
@@ -247,14 +273,14 @@ class _filterChipWidgetState extends State<filterChipWidget> {
           color: Color(0xff005ce6),
           fontSize: 16.0,
           fontWeight: FontWeight.bold),
-      selected: _isSelected,
+      selected: widget.selected,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(30.0),
       ),
       backgroundColor: Color(0xffededed),
       onSelected: (isSelected) {
         setState(() {
-          _isSelected = isSelected;
+          //_isSelected = isSelected;
           widget.selected = isSelected;
         });
       },
@@ -263,10 +289,12 @@ class _filterChipWidgetState extends State<filterChipWidget> {
   }
 }
 
-_makePostRequest(body) async {
+_makePutRequest(body, id) async {
   final Dio dio = new Dio();
   try {
-    var response = await dio.post(_localhost('/user/new'), data: body);
+    print(body);
+    var response = await dio.put(_localhost('/user/' + id), data: body);
+
     if (response.statusCode != 200)
       throw Exception('Failed to link with back end');
   } on DioError catch (e) {
