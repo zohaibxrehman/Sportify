@@ -67,17 +67,18 @@ app.put('/user/:id', (req, res) => {
     return res.sendStatus(400);
   }
 
-  const postData = {
+  const putData = {
     utorid: utorid,
     firstName: firstName,
     lastName: lastName,
     sportsInterests: sportsInterests,
-    favoriteTeam: favoriteTeam,
-    events: false
+    favoriteTeam: favoriteTeam
   };
 
   let updates = {};
-  updates['/users/' + utorid] = postData;
+  Object.keys(putData).forEach((key) => {
+    updates['/users/' + utorid + '/' + key] = putData[key];
+  })
   firebase.database().ref().update(updates);
 
   return res.sendStatus(200);
