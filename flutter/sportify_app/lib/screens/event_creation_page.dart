@@ -221,66 +221,6 @@ class AddressSearch extends SearchDelegate<Suggestion> {
   }
 }
 
-class SportPicker extends StatefulWidget {
-  @override
-  _SportPickerState createState() {
-    return _SportPickerState();
-  }
-}
-
-class _SportPickerState extends State<SportPicker> {
-  String _value;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 10.0),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15.0),
-          border: Border.all(style: BorderStyle.solid, width: 0.80),
-        ),
-        child: DropdownButton<String>(
-          isExpanded: true,
-          items: [
-            DropdownMenuItem<String>(
-              child: Text('Cricket'),
-              value: 'one',
-            ),
-            DropdownMenuItem<String>(
-              child: Text('Basketball'),
-              value: 'two',
-            ),
-            DropdownMenuItem<String>(
-              child: Text('Hockey'),
-              value: 'three',
-            ),
-            DropdownMenuItem<String>(
-              child: Text('Football'),
-              value: 'four',
-            ),
-            DropdownMenuItem<String>(
-              child: Text('Badminton'),
-              value: 'five',
-            ),
-            DropdownMenuItem<String>(
-              child: Text('Tennis'),
-              value: 'six',
-            ),
-          ],
-          onChanged: (String value) {
-            setState(() {
-              _value = value;
-            });
-          },
-          hint: Text('Select Sport'),
-          value: _value,
-        ),
-      ),
-    );
-  }
-}
-
 class EventCreationState extends State<EventCreation> {
   String _title;
   String _sport;
@@ -497,6 +437,8 @@ class EventCreationState extends State<EventCreation> {
                         return;
                       }
                       _formKey.currentState.save();
+                      print(_sport);
+                      print(dates.toString());
                       _makePostRequest({
                         "utorid": 1234,
                         "sport": _sport,
@@ -536,16 +478,4 @@ String _localhost(String route) {
     return 'http://10.0.2.2:3000' + route;
   else // for iOS simulator
     return 'http://localhost:3000' + route;
-}
-
-_makeGetRequest(id) async {
-  final Dio dio = new Dio();
-  try {
-    var response = await dio.get(_localhost('/events/' + id));
-    print(response.data['date'].toString());
-    if (response.statusCode != 200)
-      throw Exception('Failed to link with backend');
-  } on DioError catch (e) {
-    print(e);
-  }
 }
