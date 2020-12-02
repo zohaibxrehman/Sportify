@@ -72,18 +72,11 @@ class EditEventCreationState extends State<EditEventCreation> {
   String _title;
   String _sport;
   String _location;
-  String _date;
   String _description;
-  final _controller = TextEditingController();
   final _title_controller = TextEditingController();
   final _location_controller = TextEditingController();
   final _description_controller = TextEditingController();
   final _dates_controller = _date_controller;
-
-  String _streetNumber = '';
-  String _street = '';
-  String _city = '';
-  String _zipCode = '';
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
