@@ -17,8 +17,6 @@ const config = {
 };
 firebase.initializeApp(config);
 
-const database = firebase.database();
-
 app.get('/', (req, res) => {
   res.send('I am the sportify server.');
 })
@@ -174,12 +172,11 @@ app.get('/user/:id/events', (req, res) => {
       return res.send([]);
     }
   }).catch(function(error) {
-    console.log('not found bro')
     return res.sendStatus(404);
   });
 })
 
-app.put('/event/:eventId/newUser/:userId', (req, res) => {
+app.put('/event/:eventId/:userId/attend', (req, res) => {
   const utorid = req.params.userId
   const eventId = req.params.eventId
  
@@ -198,8 +195,37 @@ app.put('/event/:eventId/newUser/:userId', (req, res) => {
   return res.sendStatus(200);
 })
 
+app.put('/event/:eventId/:userId/unattend', (req, res) => {
+  const utorid = req.params.userId
+  const eventId = req.params.eventId
+ 
+  if (!(utorid && eventId)) {
+    return res.sendStatus(400);
+  }
+
+  let eventUpdates = {};
+  eventUpdates['/events/' + eventId + '/users/' + utorid] = null;
+  firebase.database().ref().update(eventUpdates);
+
+  let userUpdates = {};
+  userUpdates['/users/' + utorid + '/events/' + eventId] = null;
+  firebase.database().ref().update(userUpdates);
+
+  const userRef = firebase.database().ref('/users/' + utorid + '/events');
+  userRef.once('value').then(function(snapshot) {
+    if(!snapshot.val()){
+      let userUpdates2 = {};
+      userUpdates2['/users/' + utorid + '/events'] = false;
+      firebase.database().ref().update(userUpdates2);
+    }
+  }).catch(function(error) {
+    return res.sendStatus(500);
+  });
+
+  return res.sendStatus(200);
+})
+
 app.delete('/event/:id', (req, res) => {
-  console.log('DELETE ROUTE')
   const eventId = req.params.id
   if (!eventId) {
     return res.sendStatus(400);
