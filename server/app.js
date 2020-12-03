@@ -41,11 +41,13 @@ app.post('/user/new', (req, res) => {
     events: false
   };
 
+  
   let updates = {};
-  updates['/users/' + postData.utorid] = postData;
+  const newUserId = firebase.database().ref().child('events').push().key;
+  updates['/users/' + newUserId] = postData;
   firebase.database().ref().update(updates);
 
-  return res.sendStatus(200);
+  return res.status(200).send(newUserId);
 })
 
 app.get('/user/:id', (req, res) => {
