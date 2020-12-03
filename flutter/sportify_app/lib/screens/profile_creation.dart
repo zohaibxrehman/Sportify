@@ -5,9 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'home_page.dart';
+
 class ProfileCreation extends StatefulWidget {
-  final email;
-  ProfileCreation([this.email]);
+  //final email;
   @override
   State<StatefulWidget> createState() {
     return ProfileCreationState();
@@ -214,9 +215,11 @@ class ProfileCreationState extends State<ProfileCreation> {
                                 retrievedData
                                     .add([sport.chipName, sport.selected]);
                               print((await SharedPreferences.getInstance())
-                                  .getString('email'));
+                                  .getString('uid'));
                               _makePostRequest({
-                                "utorid": widget.email, //getValue() async {
+                                "utorid":
+                                    (await SharedPreferences.getInstance())
+                                        .getString('uid'), //getValue() async {
                                 // SharedPreferences prefs = await SharedPreferences.getInstance();
                                 // //Return String
                                 // String stringValue = prefs.getString('key');
@@ -227,6 +230,11 @@ class ProfileCreationState extends State<ProfileCreation> {
                                 "sportsInterests": retrievedData,
                                 "favoriteTeam": _favTeam,
                               });
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => HomePage()),
+                              );
                             }),
                       )
                     ],

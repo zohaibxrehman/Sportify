@@ -14,10 +14,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   final _auth = FirebaseAuth.instance;
   String email;
   String password;
+  String uid;
 
   saveValue() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('email', email);
+    prefs.setString('uid', uid);
   }
 
   @override
@@ -74,9 +75,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   final newUser = await _auth.createUserWithEmailAndPassword(
                       email: email, password: password);
                   print(newUser.additionalUserInfo);
-                  newUser.user.uid;
+                  uid = newUser.user.uid;
 
-                  //saveValue();
+                  saveValue();
 
                   print(newUser);
                   if (newUser != null) {
@@ -86,7 +87,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           // final String email;
                           // ProfileCreation({Key key, @required this.email}) : super(key: key);
                           // email: email
-                          builder: (context) => ProfileCreation(email)),
+                          builder: (context) => ProfileCreation()),
                     );
                   }
                 } catch (e) {
