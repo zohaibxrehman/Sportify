@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart';
+import 'package:sportify_app/screens/home_page.dart';
 import 'package:uuid/uuid.dart';
 
 const Sports = {
@@ -311,9 +312,8 @@ class EditEventCreationState extends State<EditEventCreation> {
                         "location": _location,
                         "date": dates.toString()
                       }, widget.id);
-                      Navigator.pop(
-                        context,
-                      );
+                      Navigator.pushReplacement(context,
+                          MaterialPageRoute(builder: (context) => HomePage()));
                     },
                   ),
                 )

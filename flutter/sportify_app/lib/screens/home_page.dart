@@ -10,6 +10,7 @@ import 'package:sportify_app/screens/chats_page.dart';
 import 'package:http/http.dart';
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:intl/intl.dart';
 
 class HomePage extends StatefulWidget {
 
@@ -101,7 +102,8 @@ class _HomePageState extends State<HomePage> {
                   '${data[data.keys.elementAt(index)]['sport']}.png', '${data[data.keys.elementAt(index)]['title']}',
                   '${data[data.keys.elementAt(index)]['sport']} event', '${data[data.keys.elementAt(index)]['location']}',
                   '${data[data.keys.elementAt(index)]['description']}', '${data[data.keys.elementAt(index)]['owner']}'
-                  , '${data[data.keys.elementAt(index)]['date']}'
+                  , '${data[data.keys.elementAt(index)]['date']}',
+                '${data.keys.elementAt(index)}'
               ),),
             ),
             child: EventWidget(
@@ -111,7 +113,8 @@ class _HomePageState extends State<HomePage> {
               location: '${data[data.keys.elementAt(index)]['location']}',
               description: '${data[data.keys.elementAt(index)]['description']}',
               author: '${data[data.keys.elementAt(index)]['owner']}',
-              date: '${data[data.keys.elementAt(index)]['date']}',
+              date: '${DateFormat("yyyy-MM-dd").format(
+              (DateFormat("yyyy-MM-dd").parse(data[data.keys.elementAt(index)]['date'].toString())))}',
               eventId: '${data.keys.elementAt(index)}',
               userId: loggedInUser
             ),
