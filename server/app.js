@@ -47,7 +47,7 @@ app.post('/user/new', (req, res) => {
   updates['/users/' + newUserId] = postData;
   firebase.database().ref().update(updates);
 
-  return res.sendStatus(200);
+  return res.status(200).send(newUserId);
 })
 
 app.get('/user/:id', (req, res) => {
