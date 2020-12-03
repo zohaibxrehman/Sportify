@@ -6,6 +6,8 @@ import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileCreation extends StatefulWidget {
+  final email;
+  ProfileCreation([this.email]);
   @override
   State<StatefulWidget> createState() {
     return ProfileCreationState();
@@ -214,10 +216,7 @@ class ProfileCreationState extends State<ProfileCreation> {
                               print((await SharedPreferences.getInstance())
                                   .getString('email'));
                               _makePostRequest({
-                                "utorid":
-                                    (await SharedPreferences.getInstance())
-                                        .getString(
-                                            'email'), //getValue() async {
+                                "utorid": widget.email, //getValue() async {
                                 // SharedPreferences prefs = await SharedPreferences.getInstance();
                                 // //Return String
                                 // String stringValue = prefs.getString('key');
@@ -279,6 +278,7 @@ _makePostRequest(body) async {
     var response = await dio.post(_localhost('/user/new'), data: body);
     if (response.statusCode != 200)
       throw Exception('Failed to link with back end');
+    print(response.data);
   } on DioError catch (e) {
     print(e);
   }
