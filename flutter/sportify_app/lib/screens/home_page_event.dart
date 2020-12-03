@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sportify_app/screens/edit_event_creation.dart';
 import 'package:sportify_app/screens/profile_creation.dart';
 import 'package:sportify_app/screens/event_creation_page.dart';
 import 'package:sportify_app/screens/chats_page.dart';
@@ -12,8 +13,9 @@ class HomePageEvent extends StatelessWidget {
   final description;
   final author;
   final date;
+  final id;
 
-  HomePageEvent([this.image, this.title, this.event, this.location, this.description, this.author, this.date]);
+  HomePageEvent([this.image, this.title, this.event, this.location, this.description, this.author, this.date, this.id]);
 
   @override
   Widget build(BuildContext context) {
@@ -66,6 +68,7 @@ class HomePageEvent extends StatelessWidget {
         description: description,
         author: author,
         date: date,
+        id: id,
       ),
     );
   }
@@ -79,8 +82,9 @@ class EventWidget extends StatelessWidget {
   final description;
   final author;
   final date;
+  final id;
 
-  EventWidget({this.image, this.title, this.event, this.location, this.description, this.author,this.date});
+  EventWidget({this.image, this.title, this.event, this.location, this.description, this.author,this.date,this.id});
 
   @override
   Widget build(BuildContext context) {
@@ -140,7 +144,14 @@ class EventWidget extends StatelessWidget {
               children: [
                 Expanded(
                   child: GestureDetector(
-                    onTap: (){},
+                    onTap: (){
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => EditEventCreation(
+                            id
+                        ),),
+                      );
+                    },
                     child: Container(
                       alignment: Alignment.center,
                       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
