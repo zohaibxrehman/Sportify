@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:sportify_app/screens/chat_page.dart';
 import 'package:sportify_app/screens/home_page_event.dart';
 import 'package:sportify_app/screens/profile_creation.dart';
+import 'package:sportify_app/screens/edit_profile.dart';
 import 'package:sportify_app/screens/event_creation_page.dart';
 import 'package:sportify_app/screens/chats_page.dart';
 import 'package:http/http.dart';
@@ -49,7 +50,7 @@ class _HomePageState extends State<HomePage> {
           onPressed: () => {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => ProfileCreation()),
+              MaterialPageRoute(builder: (context) => EditProfile()),
             )
           },
         )),
