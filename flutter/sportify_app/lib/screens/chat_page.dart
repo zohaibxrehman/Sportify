@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
-
-var loggedInUser = "Z1Ranger";
-var chatId = 'abc';
+import 'package:dio/dio.dart';
+import 'dart:io';
 
 class ChatScreen extends StatefulWidget {
   final id;
@@ -18,6 +18,7 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
 
   final _fireStore = FirebaseFirestore.instance;
+  var loggedInUser = {};
 
   String messageText;
   final msgController = TextEditingController();
@@ -25,11 +26,26 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   void initState() {
     super.initState();
-    getCurrentUser();
+    _getCurrentUser();
   }
 
-  void getCurrentUser() async {
 
+  _getCurrentUser() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String uid = prefs.getString('uid');
+    final Dio dio = new Dio();
+    try {
+      var response = await dio.get(_localhost('/user/$uid'));
+      var responseData = response.data;
+      if (response.statusCode != 200)
+        throw Exception('Failed to link with backend');
+      setState(() {
+        loggedInUser['uid'] = uid;
+        loggedInUser['name'] = responseData["firstName"];
+      });
+    } on DioError catch (e) {
+      print(e);
+    }
   }
 
   @override
@@ -56,7 +72,7 @@ class _ChatScreenState extends State<ChatScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             StreamBuilder<QuerySnapshot>(
-              stream: _fireStore.collection('messages').where('id', isEqualTo: chatId).orderBy('datetime', descending: true).snapshots(),
+              stream: _fireStore.collection('messages').where('id', isEqualTo: widget.id).orderBy('datetime', descending: true).snapshots(),
               // ignore: missing_return
               builder: (context, snapshot) {
                 List<MessageBubble> messageWidgets = [];
@@ -67,7 +83,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 for (var message in messages) {
                   bool isUser;
                   print(message['sender'] + ': ' + message['text']);
-                  if (message['sender'] == loggedInUser) {
+                  if (message['sender_id'] == loggedInUser['uid']) {
                     isUser = true;
                   } else {
                     isUser = false;
@@ -115,7 +131,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       onPressed: () {
                         msgController.clear();
                         _fireStore.collection('messages').add(
-                            {'id': chatId, 'text': messageText, 'sender': loggedInUser, 'datetime': DateTime.now().toUtc(),});
+                            {'id': widget.id, 'text': messageText, 'sender': loggedInUser['name'], 'sender_id': loggedInUser['uid'], 'datetime': DateTime.now().toUtc(),});
                       },
                       child: Icon(Icons.send, color: Color(0xFF2F80ED),),
                     ),
@@ -176,4 +192,11 @@ class MessageBubble extends StatelessWidget {
       ),
     );
   }
+}
+
+String _localhost(uri) {
+  if (Platform.isAndroid)
+    return 'http://10.0.2.2:3000' + uri;
+  else // for iOS simulator
+    return 'http://localhost:3000' + uri;
 }
