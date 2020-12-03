@@ -2,6 +2,7 @@ import 'package:http/http.dart';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sportify_app/screens/home_page.dart';
 import 'package:dio/dio.dart';
 
@@ -23,11 +24,15 @@ class EditProfileState extends State<EditProfile> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  Future<void> _makeGetRequestCopy() async {
+    _makeGetRequest((await SharedPreferences.getInstance()).getString('uid'),
+        _firstNameController, _lastNameController, _favTeamController);
+  }
+
   @override
   void initState() {
     super.initState();
-    _makeGetRequest(
-        '1234', _firstNameController, _lastNameController, _favTeamController);
+    _makeGetRequestCopy();
   }
 
   Widget _buildFirstName() {
@@ -221,7 +226,7 @@ class EditProfileState extends State<EditProfile> {
                               borderRadius: BorderRadius.circular(18.0),
                             ),
                             color: Colors.blueAccent,
-                            onPressed: () {
+                            onPressed: () async {
                               if (!_formKey.currentState.validate()) {
                                 return;
                               }
@@ -231,13 +236,19 @@ class EditProfileState extends State<EditProfile> {
                                 retrievedData
                                     .add([sport.chipName, sport.selected]);
 
-                              _makePutRequest({
-                                "utorid": 1234,
-                                "firstName": _firstName,
-                                "lastName": _lastName,
-                                "sportsInterests": retrievedData,
-                                "favoriteTeam": _favTeam,
-                              }, "1234");
+                              _makePutRequest(
+                                {
+                                  "utorid":
+                                      (await SharedPreferences.getInstance())
+                                          .getString('uid'),
+                                  "firstName": _firstName,
+                                  "lastName": _lastName,
+                                  "sportsInterests": retrievedData,
+                                  "favoriteTeam": _favTeam,
+                                },
+                                (await SharedPreferences.getInstance())
+                                    .getString('uid'),
+                              );
 
                               Navigator.push(
                                 context,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'transition_button.dart';
 import 'package:sportify_app/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -13,6 +14,12 @@ class _LoginScreenState extends State<LoginScreen> {
   final _auth = FirebaseAuth.instance;
   String email;
   String password;
+  String uid;
+
+  saveValue() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('uid', uid);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,6 +73,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 try {
                   final user = await _auth.signInWithEmailAndPassword(
                       email: email, password: password);
+
+                  uid = user.user.uid;
+
+                  saveValue();
                   if (user != null) {
                     Navigator.pushReplacement(
                       context,
