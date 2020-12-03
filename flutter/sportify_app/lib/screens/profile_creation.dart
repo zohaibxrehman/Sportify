@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileCreation extends StatefulWidget {
   @override
@@ -201,7 +202,7 @@ class ProfileCreationState extends State<ProfileCreation> {
                               borderRadius: BorderRadius.circular(18.0),
                             ),
                             color: Colors.blueAccent,
-                            onPressed: () {
+                            onPressed: () async {
                               if (!_formKey.currentState.validate()) {
                                 return;
                               }
@@ -210,9 +211,18 @@ class ProfileCreationState extends State<ProfileCreation> {
                               for (var sport in sports)
                                 retrievedData
                                     .add([sport.chipName, sport.selected]);
-
+                              print((await SharedPreferences.getInstance())
+                                  .getString('email'));
                               _makePostRequest({
-                                "utorid": 1234,
+                                "utorid":
+                                    (await SharedPreferences.getInstance())
+                                        .getString(
+                                            'email'), //getValue() async {
+                                // SharedPreferences prefs = await SharedPreferences.getInstance();
+                                // //Return String
+                                // String stringValue = prefs.getString('key');
+                                // return stringValue;
+                                //},
                                 "firstName": _firstName,
                                 "lastName": _lastName,
                                 "sportsInterests": retrievedData,
