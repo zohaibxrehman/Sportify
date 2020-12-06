@@ -151,7 +151,7 @@ class EventWidget extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('- $author', style: TextStyle(fontSize: 16),),
+                Flexible(child: Text('- $author', overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 16),)),
                 Text(date, style: TextStyle(fontSize: 16),),
               ],
             ),

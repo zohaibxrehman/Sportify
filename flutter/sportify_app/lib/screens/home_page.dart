@@ -127,7 +127,7 @@ class _HomePageState extends State<HomePage> {
               (DateFormat("yyyy-MM-dd").parse(data[data.keys.elementAt(index)]['date'].toString())))}',
               eventId: '${data.keys.elementAt(index)}',
               userId: loggedInUser,
-              attend: data[data.keys.elementAt(index)]['users'].containsKey(loggedInUser) ? 'Attend' : 'Attending'
+              attend: (data[data.keys.elementAt(index)]['users']?.containsKey(loggedInUser) ?? false ) ? 'Attending' : 'Attend'
             ),
           );
         },
@@ -158,7 +158,7 @@ class _HomePageState extends State<HomePage> {
 _putAttendEvent(eventId, userId) async {
   final Dio dio = new Dio();
   try {
-    var response = await dio.put(_localhost('/event/$eventId/$userId/attend'));
+    var response = await dio.put(_localhost('/event/$eventId/$userId/unattend'));
     print(response.statusCode);
     if (response.statusCode != 200)
       throw Exception('Failed to link with backend');
@@ -170,7 +170,7 @@ _putAttendEvent(eventId, userId) async {
 _putAttendingEvent(eventId, userId) async {
   final Dio dio = new Dio();
   try {
-    var response = await dio.put(_localhost('/event/$eventId/$userId/unattend'));
+    var response = await dio.put(_localhost('/event/$eventId/$userId/attend'));
     print(response.statusCode);
     if (response.statusCode != 200)
       throw Exception('Failed to link with backend');
@@ -230,8 +230,7 @@ class _EventWidgetState extends State<EventWidget> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Flexible(
-                    child: Text(widget.title, overflow: TextOverflow.ellipsis, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),)),
+                Flexible(child: Text(widget.title, overflow: TextOverflow.ellipsis, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),)),
                 SizedBox(width: 10,),
                 Row(
                   children: [
@@ -249,7 +248,7 @@ class _EventWidgetState extends State<EventWidget> {
 
             Container(
               margin: EdgeInsets.symmetric(vertical: 10),
-              child: Flexible(child: Text(widget.description, overflow: TextOverflow.ellipsis, maxLines: 3,)),
+              child: Text(widget.description, overflow: TextOverflow.ellipsis, maxLines: 3,),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
