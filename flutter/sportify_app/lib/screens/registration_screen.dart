@@ -4,6 +4,7 @@ import 'transition_button.dart';
 import 'package:sportify_app/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'profile_creation.dart';
+import 'verification_page.dart';
 
 class RegistrationScreen extends StatefulWidget {
   @override
