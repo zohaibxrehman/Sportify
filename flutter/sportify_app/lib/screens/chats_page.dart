@@ -4,6 +4,9 @@ import 'package:dio/dio.dart';
 import 'dart:io';
 import 'dart:convert';
 import 'package:intl/intl.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ChatsPage extends StatefulWidget {
   @override
@@ -14,15 +17,25 @@ class ChatsPage extends StatefulWidget {
 
 class ChatsPageState extends State<ChatsPage> {
   TextEditingController editingController = TextEditingController();
+  final _fireStore = FirebaseFirestore.instance;
+
   @override
   void initState() {
     _getRequest();
+    // printEmail();
     super.initState();
   }
 
   var data = List<dynamic>();
   var chatIndex = 0;
   var items = List<dynamic>();
+
+  //
+  // getValue() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   String d = prefs.getString('uid');
+  //   return d;
+  // }
 
   void filterSearchResults(String query) {
     List<dynamic> dummySearchList = List<dynamic>();
@@ -65,7 +78,7 @@ class ChatsPageState extends State<ChatsPage> {
               size: 40.0,
             ),
           ),
-          onPressed: () => {
+          onPressed: () async => {
             Navigator.pop(
               context,
             )
@@ -150,38 +163,72 @@ class ChatsPageState extends State<ChatsPage> {
     });
   }
 
-  String _localhost() {
+  String _localhost(userID) {
     if (Platform.isAndroid)
-      return 'http://10.0.2.2:3000/events/groupChatTestData';
+      return 'http://10.0.2.2:3000/user/$userID/events';
     else // for iOS simulator
-      return 'http://localhost:3000/events/groupChatTestData';
+      return 'http://localhost:3000/user/$userID/events';
   }
 
   _getRequest() async {
     final Dio dio = new Dio();
+
+    var userID = (await SharedPreferences.getInstance()).getString('uid');
+
     try {
-      var response = await dio.get(_localhost());
-      var count = response.data.length;
+      var response = await dio.get(_localhost(userID));
+      print(response.data.toString());
+      var dataList = Map<String, dynamic>.from(response.data);
 
       //print(new DateFormat.yMMMd().format(new DateTime.now()));
       //print(DateTime.now());
-      //DateTime.parse("2020-10-27 13:27");
+      // print(_fireStore
+      //     .collection('messages'));
+      // var document = _fireStore.collection('messages');
+
+      var dates = [];
+      var unref = [];
+
+      _fireStore.collection("messages").get().then((querySnapshot) {
+        querySnapshot.docs.forEach((result) {
+          print(result.data());
+          print(result.data()['id']);
+          unref.add(result.data()['datetime']);
+        });
+      });
+
+      // print(v);
+      // print(_fireStore
+      //     .collection('messages')
+      //     .orderBy('datetime', descending: true)
+      //     .snapshots());
+      // var chats = _fireStore.collection("messages");
+      // chats.get().then((value) => null)
+
+      var keys = [];
+      dataList.forEach((key, value) {
+        keys.add(key);
+      });
+      //print(keys);
 
       setState(() {
-        for (int i = 1; i <= count; i++) {
-          data.add(jsonDecode(response.toString())['eventid${i.toString()}']);
-        }
+        dataList.forEach((key, value) {
+          data.add(value);
+        });
       });
       data.sort((a, b) {
         return -a['date'].compareTo(b['date']);
       });
+
       formatDates();
       returnData(items);
 
       if (response.statusCode != 200)
         throw Exception('Failed to link with backend');
     } on DioError catch (e) {
-      print(e);
+      print(e.response.data);
+      print(e.response.headers);
+      print(e.response.request);
     }
   }
 
