@@ -249,12 +249,12 @@ class _EventWidgetState extends State<EventWidget> {
 
             Container(
               margin: EdgeInsets.symmetric(vertical: 10),
-              child: Text(widget.description, overflow: TextOverflow.ellipsis, maxLines: 3,),
+              child: Flexible(child: Text(widget.description, overflow: TextOverflow.ellipsis, maxLines: 3,)),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('- ${widget.author}', style: TextStyle(fontSize: 16),),
+                Flexible(child: Text('- ${widget.author}', overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 16),)),
                 Text(widget.date, style: TextStyle(fontSize: 16),),
               ],
             ),
