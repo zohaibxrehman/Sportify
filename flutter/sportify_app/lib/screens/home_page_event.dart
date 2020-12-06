@@ -18,8 +18,9 @@ class HomePageEvent extends StatelessWidget {
   final author;
   final date;
   final id;
+  final creator;
 
-  HomePageEvent([this.image, this.title, this.event, this.location, this.description, this.author, this.date, this.id]);
+  HomePageEvent([this.image, this.title, this.event, this.location, this.description, this.author, this.date, this.id, this.creator]);
 
   @override
   Widget build(BuildContext context) {
@@ -73,6 +74,7 @@ class HomePageEvent extends StatelessWidget {
         author: author,
         date: date,
         id: id,
+        creator: creator,
       ),
     );
   }
@@ -87,8 +89,9 @@ class EventWidget extends StatelessWidget {
   final author;
   final date;
   final id;
+  final creator;
 
-  EventWidget({this.image, this.title, this.event, this.location, this.description, this.author,this.date,this.id});
+  EventWidget({this.image, this.title, this.event, this.location, this.description, this.author,this.date,this.id, this.creator});
 
   _deleteEvent() async {
     final Dio dio = new Dio();
@@ -156,7 +159,7 @@ class EventWidget extends StatelessWidget {
               ],
             ),
             SizedBox(height: 25,),
-            Row(
+            creator ? Row(
               children: [
                 Expanded(
                   child: GestureDetector(
@@ -207,7 +210,7 @@ class EventWidget extends StatelessWidget {
                     ),),),
                 ),
               ],
-            ),
+            ) : SizedBox(),
           ],
         ),
       ),);

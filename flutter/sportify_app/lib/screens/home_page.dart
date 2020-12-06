@@ -105,16 +105,18 @@ class _HomePageState extends State<HomePage> {
         shrinkWrap: true,
         itemCount: data.keys.length,
         itemBuilder: (BuildContext context, int index) {
+          var creator = loggedInUser == '${data[data.keys.elementAt(index)]['owner']}';
           return GestureDetector(
             onTap: () => Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => HomePageEvent(
                   '${data[data.keys.elementAt(index)]['sport']}.png', '${data[data.keys.elementAt(index)]['title']}',
                   '${data[data.keys.elementAt(index)]['sport']} event', '${data[data.keys.elementAt(index)]['location']}',
-                  '${data[data.keys.elementAt(index)]['description']}', '${data[data.keys.elementAt(index)]['owner']}'
+                  '${data[data.keys.elementAt(index)]['description']}', '${data[data.keys.elementAt(index)]['userInfo']['firstName']} ${data[data.keys.elementAt(index)]['userInfo']['lastName']}'
                   , '${DateFormat("yyyy-MM-dd").format(
                   (DateFormat("yyyy-MM-dd").parse(data[data.keys.elementAt(index)]['date'].toString())))}',
-                '${data.keys.elementAt(index)}'
+                '${data.keys.elementAt(index)}',
+                creator,
               ),),
             ),
             child: EventWidget(
