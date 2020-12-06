@@ -4,6 +4,7 @@ import 'transition_button.dart';
 import 'package:sportify_app/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'profile_creation.dart';
+import 'verification_page.dart';
 
 class RegistrationScreen extends StatefulWidget {
   @override
@@ -87,7 +88,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           // final String email;
                           // ProfileCreation({Key key, @required this.email}) : super(key: key);
                           // email: email
-                          builder: (context) => ProfileCreation()),
+                          builder: (context) => VerifyScreen()),
                     );
                   }
                 } catch (e) {
