@@ -31,6 +31,7 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       loggedInUser = uid;
     });
+
   }
 
   @override
@@ -122,7 +123,7 @@ class _HomePageState extends State<HomePage> {
               event: '${data[data.keys.elementAt(index)]['sport']} event',
               location: '${data[data.keys.elementAt(index)]['location']}',
               description: '${data[data.keys.elementAt(index)]['description']}',
-              author: '${data[data.keys.elementAt(index)]['owner']}',
+              author: '${data[data.keys.elementAt(index)]['userInfo']['firstName']} ${data[data.keys.elementAt(index)]['userInfo']['lastName']}',
               date: '${DateFormat("yyyy-MM-dd").format(
               (DateFormat("yyyy-MM-dd").parse(data[data.keys.elementAt(index)]['date'].toString())))}',
               eventId: '${data.keys.elementAt(index)}',
@@ -145,14 +146,30 @@ class _HomePageState extends State<HomePage> {
         throw Exception('Failed to link with backend');
       print('>>');
       print(responseData[responseData.keys.elementAt(0)]['users']);
+      for (var i = 0; i < responseData.keys.length; i++){
+        responseData[responseData.keys.elementAt(i)]['userInfo'] = await _getUserById(responseData[responseData.keys.elementAt(i)]['owner']);
+      }
       setState(() {
         data = responseData;
       });
+      print(data);
     } on DioError catch (e) {
       print(e);
     }
   }
 
+  _getUserById(id) async {
+    final Dio dio = new Dio();
+    try {
+      var response = await dio.get(_localhost('/user/$id'));
+      var responseData = response.data;
+      if (response.statusCode != 200)
+        throw Exception('Failed to link with backend');
+      return responseData;
+    } on DioError catch (e) {
+      print(e);
+    }
+  }
 }
 
 _putAttendEvent(eventId, userId) async {
