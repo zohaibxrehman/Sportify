@@ -1,9 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sportify_app/screens/edit_event_creation.dart';
+import 'package:sportify_app/screens/home_page.dart';
 import 'package:sportify_app/screens/profile_creation.dart';
 import 'package:sportify_app/screens/event_creation_page.dart';
 import 'package:sportify_app/screens/chats_page.dart';
+import 'package:dio/dio.dart';
+import 'dart:io';
+
 
 class HomePageEvent extends StatelessWidget {
   final image;
@@ -14,8 +18,9 @@ class HomePageEvent extends StatelessWidget {
   final author;
   final date;
   final id;
+  final creator;
 
-  HomePageEvent([this.image, this.title, this.event, this.location, this.description, this.author, this.date, this.id]);
+  HomePageEvent([this.image, this.title, this.event, this.location, this.description, this.author, this.date, this.id, this.creator]);
 
   @override
   Widget build(BuildContext context) {
@@ -69,6 +74,7 @@ class HomePageEvent extends StatelessWidget {
         author: author,
         date: date,
         id: id,
+        creator: creator,
       ),
     );
   }
@@ -83,8 +89,21 @@ class EventWidget extends StatelessWidget {
   final author;
   final date;
   final id;
+  final creator;
 
-  EventWidget({this.image, this.title, this.event, this.location, this.description, this.author,this.date,this.id});
+  EventWidget({this.image, this.title, this.event, this.location, this.description, this.author,this.date,this.id, this.creator});
+
+  _deleteEvent() async {
+    final Dio dio = new Dio();
+    try {
+      var response = await dio.delete(_localhost('/event/' + id));
+      if (response.statusCode != 200)
+        throw Exception('Failed to link with backend');
+      return response;
+    } on DioError catch (e) {
+      print(e);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -135,12 +154,12 @@ class EventWidget extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('- $author', style: TextStyle(fontSize: 16),),
+                Flexible(child: Text('- $author', overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 16),)),
                 Text(date, style: TextStyle(fontSize: 16),),
               ],
             ),
             SizedBox(height: 25,),
-            Row(
+            creator ? Row(
               children: [
                 Expanded(
                   child: GestureDetector(
@@ -170,7 +189,11 @@ class EventWidget extends StatelessWidget {
                 SizedBox(width: 5,),
                 Expanded(
                   child: GestureDetector(
-                    onTap: (){},
+                    onTap: (){
+                      _deleteEvent();
+                        Navigator.pushReplacement(context,
+                        MaterialPageRoute(builder: (context) => HomePage()));
+                        },
                     child: Container(
                       alignment: Alignment.center,
                       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
@@ -187,10 +210,16 @@ class EventWidget extends StatelessWidget {
                     ),),),
                 ),
               ],
-            ),
+            ) : SizedBox(),
           ],
         ),
       ),);
   }
 }
 
+String _localhost(uri) {
+  if (Platform.isAndroid)
+    return 'http://10.0.2.2:3000' + uri;
+  else // for iOS simulator
+    return 'http://localhost:3000' + uri;
+}
