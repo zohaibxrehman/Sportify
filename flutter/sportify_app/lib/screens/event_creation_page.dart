@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
 import 'dart:convert';
 import 'dart:io';
@@ -21,7 +22,27 @@ const Sports = {
   "five": "Badminton",
   "Badminton": "five",
   "six": "Tennis",
-  "Tennis": "six"
+  "Tennis": "six",
+  "seven": "Soccer",
+  "Soccer": "seven",
+  "eight": "Volleyball",
+  "Volleyball": "eight",
+  "nine": "Baseball",
+  "Baseball": "nine",
+  "ten": "Bowling",
+  "Bowling": "ten",
+  "eleven": "Table Tennis",
+  "Table Tennis": "eleven",
+  "twelve": "Golf",
+  "Golf": "twelve",
+  "thirteen": "Field Hockey",
+  "Field Hockey": "thirteen",
+  "fourteen": "Softball",
+  "Softball": "fourteen",
+  "fifteen": "Skate Boarding",
+  "Skate Boarding": "fifteen",
+  "sixteen": "Rowing",
+  "Rowing": "sixteen",
 };
 
 var dates;
@@ -57,7 +78,7 @@ class BasicDateField extends StatelessWidget {
           if (newSelectedDate != null) {
             dates = newSelectedDate;
           }
-          return newSelectedDate;
+          return dates;
         },
       ),
     ]);
@@ -123,6 +144,46 @@ class EventCreationState extends State<EventCreation> {
             DropdownMenuItem<String>(
               child: Text('Tennis'),
               value: 'six',
+            ),
+            DropdownMenuItem<String>(
+              child: Text('Soccer'),
+              value: 'seven',
+            ),
+            DropdownMenuItem<String>(
+              child: Text('Volleyball'),
+              value: 'eight',
+            ),
+            DropdownMenuItem<String>(
+              child: Text('Baseball'),
+              value: 'nine',
+            ),
+            DropdownMenuItem<String>(
+              child: Text('Bowling'),
+              value: 'ten',
+            ),
+            DropdownMenuItem<String>(
+              child: Text('Table Tennis'),
+              value: 'eleven',
+            ),
+            DropdownMenuItem<String>(
+              child: Text('Golf'),
+              value: 'twelve',
+            ),
+            DropdownMenuItem<String>(
+              child: Text('Field Hockey'),
+              value: 'thirteen',
+            ),
+            DropdownMenuItem<String>(
+              child: Text('Softball'),
+              value: 'fourteen',
+            ),
+            DropdownMenuItem<String>(
+              child: Text('Skate Boarding'),
+              value: 'fifteen',
+            ),
+            DropdownMenuItem<String>(
+              child: Text('Rowing'),
+              value: 'sixteen',
             ),
           ],
           onChanged: (String value) {
@@ -247,15 +308,14 @@ class EventCreationState extends State<EventCreation> {
                         borderRadius: BorderRadius.circular(18.0),
                         side: BorderSide(color: Colors.blueAccent)),
                     color: Colors.blueAccent,
-                    onPressed: () {
+                    onPressed: () async {
                       if (!_formKey.currentState.validate()) {
                         return;
                       }
                       _formKey.currentState.save();
-                      print(_sport);
-                      print(dates.toString());
                       _makePostRequest({
-                        "utorid": 1234,
+                        "utorid": (await SharedPreferences.getInstance())
+                            .getString('uid'),
                         "sport": _sport,
                         "title": _title,
                         "description": _description,
