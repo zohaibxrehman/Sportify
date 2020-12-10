@@ -118,7 +118,13 @@ app.post('/event/new', (req, res) => {
 app.get('/events', (req, res) => {
   const eventRef = firebase.database().ref('/events');
   eventRef.once('value').then(function(snapshot) {
-    return res.send(snapshot.val());
+    let events = []
+    const snapshotVal = snapshot.val()
+    for (const eventIdx in snapshotVal) {
+      events.push({...snapshotVal[eventIdx], eventId: eventIdx})
+    }
+    events.sort((a, b) => new Date(b.date) - new Date(a.date))
+    res.send(events)
   }).catch(function(error) {
     return res.sendStatus(404);
   });
