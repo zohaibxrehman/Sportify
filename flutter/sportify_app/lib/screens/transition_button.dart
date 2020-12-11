@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+// This is a screen that allows the login and registration to share this class
+// that they both use. Both of those screens require this button, so this allows
+// for less overall code
+
 class TransitionBlock extends StatelessWidget {
   final Color color;
   final String title;

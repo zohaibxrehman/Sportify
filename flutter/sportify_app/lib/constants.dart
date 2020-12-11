@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+// This is a screen that allows the login and registration to share their
+// widgets that they both need.
+// Both of those screens require constant widgets from here that they both use.
+
 const kSendButtonTextStyle = TextStyle(
   color: Colors.lightBlueAccent,
   fontWeight: FontWeight.bold,
