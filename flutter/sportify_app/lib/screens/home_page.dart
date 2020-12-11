@@ -111,7 +111,7 @@ class _HomePageState extends State<HomePage> {
               context,
               MaterialPageRoute(builder: (context) {
                 return  HomePageEvent(
-                  '${data[index]['sport']}.png', '${data[index]['title']}',
+                  '${data[index]['sport']}'.toLowerCase(), '${data[index]['title']}',
                   '${data[index]['sport']} event', '${data[index]['location']}',
                   '${data[index]['description']}', '${data[index]['userInfo']['firstName']} ${data[index]['userInfo']['lastName']}'
                   , '${DateFormat("yyyy-MM-dd").format(
