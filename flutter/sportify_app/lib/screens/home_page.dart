@@ -22,7 +22,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
-  var data = {};
+  var data = [];
   var loggedInUser;
 
   _getCurrentUser() async {
@@ -103,34 +103,35 @@ class _HomePageState extends State<HomePage> {
       body: ListView.builder(
         scrollDirection: Axis.vertical,
         shrinkWrap: true,
-        itemCount: data.keys.length,
+        itemCount: data.length,
         itemBuilder: (BuildContext context, int index) {
-          var creator = loggedInUser == '${data[data.keys.elementAt(index)]['owner']}';
+          var creator = loggedInUser == '${data[index]['owner']}';
           return GestureDetector(
             onTap: () => Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => HomePageEvent(
-                  '${data[data.keys.elementAt(index)]['sport']}.png', '${data[data.keys.elementAt(index)]['title']}',
-                  '${data[data.keys.elementAt(index)]['sport']} event', '${data[data.keys.elementAt(index)]['location']}',
-                  '${data[data.keys.elementAt(index)]['description']}', '${data[data.keys.elementAt(index)]['userInfo']['firstName']} ${data[data.keys.elementAt(index)]['userInfo']['lastName']}'
+              MaterialPageRoute(builder: (context) {
+                return  HomePageEvent(
+                  '${data[index]['sport']}.png', '${data[index]['title']}',
+                  '${data[index]['sport']} event', '${data[index]['location']}',
+                  '${data[index]['description']}', '${data[index]['userInfo']['firstName']} ${data[index]['userInfo']['lastName']}'
                   , '${DateFormat("yyyy-MM-dd").format(
-                  (DateFormat("yyyy-MM-dd").parse(data[data.keys.elementAt(index)]['date'].toString())))}',
-                '${data.keys.elementAt(index)}',
+                  (DateFormat("yyyy-MM-dd").parse(data[index]['date'].toString())))}',
+                '${data[index]['eventId']}',
                 creator,
-              ),),
+              );},),
             ),
             child: EventWidget(
-              image: '${data[data.keys.elementAt(index)]['sport']}'.toLowerCase(),
-              title: '${data[data.keys.elementAt(index)]['title']}',
-              event: '${data[data.keys.elementAt(index)]['sport']} event',
-              location: '${data[data.keys.elementAt(index)]['location']}',
-              description: '${data[data.keys.elementAt(index)]['description']}',
-              author: '${data[data.keys.elementAt(index)]['userInfo']['firstName']} ${data[data.keys.elementAt(index)]['userInfo']['lastName']}',
+              image: '${data[index]['sport']}'.toLowerCase(),
+              title: '${data[index]['title']}',
+              event: '${data[index]['sport']} event',
+              location: '${data[index]['location']}',
+              description: '${data[index]['description']}',
+              author: '${data[index]['userInfo']['firstName']} ${data[index]['userInfo']['lastName']}',
               date: '${DateFormat("yyyy-MM-dd").format(
-              (DateFormat("yyyy-MM-dd").parse(data[data.keys.elementAt(index)]['date'].toString())))}',
-              eventId: '${data.keys.elementAt(index)}',
+              (DateFormat("yyyy-MM-dd").parse(data[index]['date'].toString())))}',
+              eventId: '${data[index]['eventId']}',
               userId: loggedInUser,
-              attend: (data[data.keys.elementAt(index)]['users']?.containsKey(loggedInUser) ?? false ) ? 'Attending' : 'Attend'
+              attend: (data[index]['users']?.containsKey(loggedInUser) ?? false ) ? 'Attending' : 'Attend'
             ),
           );
         },
@@ -139,22 +140,20 @@ class _HomePageState extends State<HomePage> {
   }
 
   _getEventsRequest() async {
-    print('>>');
     final Dio dio = new Dio();
     try {
       var response = await dio.get(_localhost('/events'));
       var responseData = response.data;
       if (response.statusCode != 200)
         throw Exception('Failed to link with backend');
-      print('>>');
-      print(responseData[responseData.keys.elementAt(0)]['users']);
-      for (var i = 0; i < responseData.keys.length; i++){
-        responseData[responseData.keys.elementAt(i)]['userInfo'] = await _getUserById(responseData[responseData.keys.elementAt(i)]['owner']);
+      for (var i = 0; i < responseData.length; i++){
+        responseData[i]['userInfo'] = await _getUserById(responseData[i]['owner']);
       }
+      // print(responseData);
+      print(responseData.runtimeType);
       setState(() {
         data = responseData;
       });
-      print(data);
     } on DioError catch (e) {
       print(e);
     }
