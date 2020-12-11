@@ -5,6 +5,10 @@ import 'package:sportify_app/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'home_page.dart';
 
+// This file deals with the login of a an existing user. This file is similar to
+// the registration screen, except it will redirect directly to the home screen
+// once the user is authorized with the correct email and password
+
 class LoginScreen extends StatefulWidget {
   @override
   _LoginScreenState createState() => _LoginScreenState();
@@ -16,15 +20,10 @@ class _LoginScreenState extends State<LoginScreen> {
   String password;
   String uid;
 
+  // This allows the App to know which user is logged in
   saveValue() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('uid', uid);
-  }
-
-  Future<String> getValue() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String d = prefs.getString('uid');
-    return d;
   }
 
   void _showToast(BuildContext context, e) {
@@ -94,9 +93,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     uid = user.user.uid;
 
                     saveValue();
-                    // print("WOW" + uid);
-                    // String r = await getValue();
-                    // print(r.toString());
 
                     if (user != null) {
                       Navigator.pushReplacement(
@@ -105,7 +101,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       );
                     }
                   } catch (e) {
-                    // print(e);
                     _showToast(context, e);
                   }
                 },

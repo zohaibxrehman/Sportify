@@ -2,11 +2,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'dart:io';
-import 'dart:convert';
+import 'package:sportify_app/screens/chat_page.dart';
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+// This screen is displayed when the user clicks the top right icon in
+// the home screen. This screen is where the user can see all of the group
+// chats that they are in. The user can simply click the specific event card
+// to be taken to that chat.
+
+// Currently, the dates are configured to be the date of the event instead of
+// the date of the last sent message. Hope to develop the latter.
 
 class ChatsPage extends StatefulWidget {
   @override
@@ -17,12 +24,11 @@ class ChatsPage extends StatefulWidget {
 
 class ChatsPageState extends State<ChatsPage> {
   TextEditingController editingController = TextEditingController();
-  final _fireStore = FirebaseFirestore.instance;
+  // final _fireStore = FirebaseFirestore.instance;
 
   @override
   void initState() {
-    _getRequest();
-    // printEmail();
+    _configureData();
     super.initState();
   }
 
@@ -30,13 +36,8 @@ class ChatsPageState extends State<ChatsPage> {
   var chatIndex = 0;
   var items = List<dynamic>();
 
-  //
-  // getValue() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   String d = prefs.getString('uid');
-  //   return d;
-  // }
-
+  // This function will filter the search results of the group chats
+  // based on the title of the event
   void filterSearchResults(String query) {
     List<dynamic> dummySearchList = List<dynamic>();
     returnData(dummySearchList);
@@ -120,12 +121,19 @@ class ChatsPageState extends State<ChatsPage> {
                   return Card(
                       child: ListTile(
                     onTap: () => {
-                      // TODO: Add a way to click on each event page
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ChatScreen(items[index]['id']),
+                        ),
+                      )
                     },
                     title: Text('${items[index]["title"]}',
                         style: TextStyle(fontWeight: FontWeight.bold)),
                     leading: Image(
-                      image: AssetImage('images/${items[index]["image"]}'),
+                      image: AssetImage(
+                          'images/${items[index]["sport"]}'.toLowerCase() +
+                              '.png'),
                       width: 45,
                       height: 45,
                     ),
@@ -157,67 +165,62 @@ class ChatsPageState extends State<ChatsPage> {
     );
   }
 
+  // Adds the sorted data to the items List to be used to create the widgets
   returnData(List<dynamic> dataList) {
     data.forEach((element) {
       dataList.add(element);
     });
   }
 
-  String _localhost(userID) {
+  // Will return the required platform protocol for API calls
+  String _localhost() {
     if (Platform.isAndroid)
-      return 'http://10.0.2.2:3000/user/$userID/events';
+      return 'http://10.0.2.2:3000';
     else // for iOS simulator
-      return 'http://localhost:3000/user/$userID/events';
+      return 'http://localhost:3000';
   }
 
-  _getRequest() async {
+  // This function will collect and sort the data from the firebase database
+  // into a list called 'items' that we can use to construct our widgets
+  _configureData() async {
     final Dio dio = new Dio();
 
     var userID = (await SharedPreferences.getInstance()).getString('uid');
 
     try {
-      var response = await dio.get(_localhost(userID));
-      print(response.data.toString());
-      var dataList = Map<String, dynamic>.from(response.data);
+      Response<dynamic> response =
+          await dio.get(_localhost() + '/user/$userID/events');
 
-      //print(new DateFormat.yMMMd().format(new DateTime.now()));
-      //print(DateTime.now());
-      // print(_fireStore
-      //     .collection('messages'));
-      // var document = _fireStore.collection('messages');
+      var dataList = List<dynamic>.from(response.data);
+      var dataMap = {};
+      var element;
 
-      var dates = [];
-      var unref = [];
+      for (var i = 0; i < dataList.length; i++) {
+        element = dataList[i];
+        var eventResponse = await dio.get(_localhost() + '/event/$element');
+        eventResponse.data['id'] = element;
+        dataMap[element] = eventResponse.data;
+      }
 
-      _fireStore.collection("messages").get().then((querySnapshot) {
-        querySnapshot.docs.forEach((result) {
-          print(result.data());
-          print(result.data()['id']);
-          unref.add(result.data()['datetime']);
-        });
-      });
-
-      // print(v);
-      // print(_fireStore
-      //     .collection('messages')
-      //     .orderBy('datetime', descending: true)
-      //     .snapshots());
-      // var chats = _fireStore.collection("messages");
-      // chats.get().then((value) => null)
-
-      var keys = [];
-      dataList.forEach((key, value) {
-        keys.add(key);
-      });
-      //print(keys);
+      // Testing for setting chat time to last recent message time
+      // Currently in development
+      // var unref = [];
+      // _fireStore.collection("messages").get().then((querySnapshot) {
+      //   querySnapshot.docs.forEach((result) {
+      // print(result.data());
+      // print(result.data()['id']);
+      //     unref.add(result.data()['datetime']);
+      //   });
+      // });
 
       setState(() {
-        dataList.forEach((key, value) {
+        dataMap.forEach((key, value) {
           data.add(value);
         });
       });
+
       data.sort((a, b) {
-        return -a['date'].compareTo(b['date']);
+        return a['date'].compareTo(b['date']);
       });
 
       formatDates();
@@ -232,6 +235,8 @@ class ChatsPageState extends State<ChatsPage> {
     }
   }
 
+  // This function reconfigures the date objects so that they can be read easily
+  // by the user. For example, writing 'Tuesday' is better than 12/15/2020
   formatDates() {
     var tempDate;
     var now = DateTime.now();

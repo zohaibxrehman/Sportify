@@ -3,8 +3,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'transition_button.dart';
 import 'package:sportify_app/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'profile_creation.dart';
 import 'verification_page.dart';
+
+// This file deals with the registration of a new user. This file is similar to
+// the login screen, except it will redirect to the verification screen to
+// make sure that the user is a registered UofT student
 
 class RegistrationScreen extends StatefulWidget {
   @override
@@ -17,11 +20,14 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   String password;
   String uid;
 
+  // This allows the App to know which user is logged in
   saveValue() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('uid', uid);
   }
 
+  // Whenever there's an error in the registration, a small toast will show the
+  // user what the problem was
   void _showToast(BuildContext context, e) {
     final scaffold = Scaffold.of(context);
     var index = e.toString().indexOf(']');
@@ -97,7 +103,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => ProfileCreation()),
+                              builder: (context) => VerifyScreen()),
                         );
                       }
                     } catch (e) {
