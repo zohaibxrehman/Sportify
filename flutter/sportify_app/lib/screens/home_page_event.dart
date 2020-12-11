@@ -120,7 +120,7 @@ class EventWidget extends StatelessWidget {
             decoration: BoxDecoration(
               image: DecorationImage(
                 fit: BoxFit.contain,
-                image: AssetImage('images/cricket.png',),
+                image: AssetImage('images/$image.png'),
               ),
               borderRadius: BorderRadius.circular(20),
             ),
