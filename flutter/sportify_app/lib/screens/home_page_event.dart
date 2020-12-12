@@ -8,6 +8,10 @@ import 'package:sportify_app/screens/chats_page.dart';
 import 'package:dio/dio.dart';
 import 'dart:io';
 
+// After you log in this is the view that you come across the home page. If you
+// click on an individual event, you will be taken to this view where you
+// get extra information about the event and ability to edit and delete the
+// event if you are the user who created the event.
 
 class HomePageEvent extends StatelessWidget {
   final image;
@@ -92,6 +96,8 @@ class EventWidget extends StatelessWidget {
   final creator;
 
   EventWidget({this.image, this.title, this.event, this.location, this.description, this.author,this.date,this.id, this.creator});
+
+  // request for to delete event
 
   _deleteEvent() async {
     final Dio dio = new Dio();
@@ -216,6 +222,8 @@ class EventWidget extends StatelessWidget {
       ),);
   }
 }
+
+// Used for connecting to localhost
 
 String _localhost(uri) {
   if (Platform.isAndroid)

@@ -14,6 +14,10 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:intl/intl.dart';
 
+// After you log in this is the view that you come across. Here, you will
+// see all the active events and have the ability to view your profile, chat,
+// and mark your attendance for your event.
+
 class HomePage extends StatefulWidget {
 
   @override
@@ -139,6 +143,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  // request to get all active events
   _getEventsRequest() async {
     final Dio dio = new Dio();
     try {
@@ -159,6 +164,7 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  // request to get information about the current user
   _getUserById(id) async {
     final Dio dio = new Dio();
     try {
@@ -173,6 +179,8 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
+// request to modify attendance - un attending
+
 _putAttendEvent(eventId, userId) async {
   final Dio dio = new Dio();
   try {
@@ -184,6 +192,8 @@ _putAttendEvent(eventId, userId) async {
     print(e);
   }
 }
+
+// request to modify attendance - attending
 
 _putAttendingEvent(eventId, userId) async {
   final Dio dio = new Dio();
@@ -197,12 +207,17 @@ _putAttendingEvent(eventId, userId) async {
   }
 }
 
+//Used for connecting to localhost - api request
 String _localhost(uri) {
   if (Platform.isAndroid)
     return 'http://10.0.2.2:3000' + uri;
   else // for iOS simulator
     return 'http://localhost:3000' + uri;
 }
+
+
+// This is for building the ui component - individual event card you see on the
+// home page.
 
 class EventWidget extends StatefulWidget {
   final title;
