@@ -1,6 +1,13 @@
 # Sportify
 
 ## Installation
+
+Install the required software from the links below:
+
+1. Android Studio : https://developer.android.com/studio
+2. Flutter : https://flutter.dev/docs/get-started/install
+3. Node : https://nodejs.org/en/
+
 **Step 1:**
 
 Download or clone this repo by using the link below:
@@ -10,8 +17,9 @@ https://github.com/UTSCCSCC01/Sportify.git
 
 **Step 2:**
 
-Go to ~/server and execute the following command (make sure you have Node installed) to enable the server :
+Go to ~/server and execute the following command (make sure you have Node installed) to install node dependencies and  enable the server :
 ```
+npm install
 node app.js
 ```
 
