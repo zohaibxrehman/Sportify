@@ -6,6 +6,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:dio/dio.dart';
 import 'dart:io';
 
+// This screen is displayed when the user clicks the chat icon on the home page
+// for each event or in the group chats view. This screen is where the user can
+// chat with others in the particular events group chat.
+
 class ChatScreen extends StatefulWidget {
   final id;
 
@@ -29,7 +33,7 @@ class _ChatScreenState extends State<ChatScreen> {
     _getCurrentUser();
   }
 
-
+  // api request for getting information about the current user
   _getCurrentUser() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String uid = prefs.getString('uid');
@@ -82,7 +86,6 @@ class _ChatScreenState extends State<ChatScreen> {
                 final messages = snapshot.data.docs;
                 for (var message in messages) {
                   bool isUser;
-                  print(message['sender'] + ': ' + message['text']);
                   if (message['sender_id'] == loggedInUser['uid']) {
                     isUser = true;
                   } else {
@@ -146,6 +149,8 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 }
 
+// This is to build the ui component - individual chat bubble
+
 class MessageBubble extends StatelessWidget {
   MessageBubble({this.messageText, this.messageSender, this.isUser});
 
@@ -193,6 +198,8 @@ class MessageBubble extends StatelessWidget {
     );
   }
 }
+
+//Used for connecting to localhost - api request
 
 String _localhost(uri) {
   if (Platform.isAndroid)
