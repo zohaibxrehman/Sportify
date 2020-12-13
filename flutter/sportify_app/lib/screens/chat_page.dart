@@ -86,7 +86,6 @@ class _ChatScreenState extends State<ChatScreen> {
                 final messages = snapshot.data.docs;
                 for (var message in messages) {
                   bool isUser;
-                  print(message['sender'] + ': ' + message['text']);
                   if (message['sender_id'] == loggedInUser['uid']) {
                     isUser = true;
                   } else {

@@ -154,8 +154,6 @@ class _HomePageState extends State<HomePage> {
       for (var i = 0; i < responseData.length; i++){
         responseData[i]['userInfo'] = await _getUserById(responseData[i]['owner']);
       }
-      // print(responseData);
-      print(responseData.runtimeType);
       setState(() {
         data = responseData;
       });
@@ -185,7 +183,6 @@ _putAttendEvent(eventId, userId) async {
   final Dio dio = new Dio();
   try {
     var response = await dio.put(_localhost('/event/$eventId/$userId/unattend'));
-    print(response.statusCode);
     if (response.statusCode != 200)
       throw Exception('Failed to link with backend');
   } on DioError catch (e) {
@@ -199,7 +196,6 @@ _putAttendingEvent(eventId, userId) async {
   final Dio dio = new Dio();
   try {
     var response = await dio.put(_localhost('/event/$eventId/$userId/attend'));
-    print(response.statusCode);
     if (response.statusCode != 200)
       throw Exception('Failed to link with backend');
   } on DioError catch (e) {
