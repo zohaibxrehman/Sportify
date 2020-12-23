@@ -166,10 +166,8 @@ app.get('/events', (req, res) => {
 
     // sorting event lists by date
     events.sort((a, b) => {
-      console.log(new Date(b.createdAt))
       return new Date(b.createdAt) - new Date(a.createdAt)
     })
-
 
     res.send(events)
   }).catch(function(error) {
