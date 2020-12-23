@@ -134,7 +134,8 @@ app.post('/event/new', (req, res) => {
     description: description,
     location: location,
     date: date,
-    sport: sport
+    sport: sport,
+    createdAt: new Date().toString()
   };
 
   // create new event
@@ -164,7 +165,12 @@ app.get('/events', (req, res) => {
     }
 
     // sorting event lists by date
-    events.sort((a, b) => new Date(b.date) - new Date(a.date))
+    events.sort((a, b) => {
+      console.log(new Date(b.createdAt))
+      return new Date(b.createdAt) - new Date(a.createdAt)
+    })
+
+
     res.send(events)
   }).catch(function(error) {
     return res.sendStatus(404);
