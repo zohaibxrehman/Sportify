@@ -1,5 +1,14 @@
 # Sportify
 
+<img src='https://raw.githubusercontent.com/zohaibxrehman/Sportify/main/screenshots/66FD781A-DEB1-4799-944F-B9CEF98A32CC_1_201_a.jpeg' height='500'>
+<img src='https://raw.githubusercontent.com/zohaibxrehman/Sportify/main/screenshots/7A154100-8773-4F33-8519-F5D96463F7D3_1_201_a.jpeg' height='500'>
+<img src='https://raw.githubusercontent.com/zohaibxrehman/Sportify/main/screenshots/Screen%20Shot%202021-01-18%20at%205.39.22%20PM.png' height='500'>
+<img src='https://raw.githubusercontent.com/zohaibxrehman/Sportify/main/screenshots/CEA1406F-EA3E-414C-B67C-AADFC63D0F1F_1_201_a.jpeg' height='500'>
+<img src='https://raw.githubusercontent.com/zohaibxrehman/Sportify/main/screenshots/4F7AFD81-6658-4C4A-A7E9-F99E3892DC61_1_201_a.jpeg' height='500'>
+<img src='https://raw.githubusercontent.com/zohaibxrehman/Sportify/main/screenshots/114D7DFD-7DF5-476A-ADB1-DD8AA7C63D78_1_201_a.jpeg' height='500'>
+<img src='https://raw.githubusercontent.com/zohaibxrehman/Sportify/main/screenshots/94A61581-E94C-4158-BCF1-44596F2B4CB1_1_201_a.jpeg' height='500'>
+<img src='https://raw.githubusercontent.com/zohaibxrehman/Sportify/main/screenshots/9F0DBDCA-E2F8-49BF-8355-C5431189362F_1_201_a.jpeg' height='500'>
+
 ## Installation
 
 Install the required software from the links below:
